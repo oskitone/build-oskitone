@@ -1,16 +1,15 @@
 import Link from "next/link";
 import Head from "../components/head";
+import Header from "../components/header";
 import Preview from "../components/preview";
 import Editor from "../components/editor";
-
-import { Component } from "react";
 
 // ERROR: You may need an appropriate loader to handle this file type
 // import "bootstrap/dist/css/bootstrap.css";
 
 import { Col, Container, Row } from "reactstrap";
 
-class Index extends Component {
+class Index extends React.Component {
     constructor(props) {
         super(props);
 
@@ -32,13 +31,14 @@ class Index extends Component {
         return (
             <Container>
                 <Head title="build.oskitone" />
+                <Header title="build.oskitone" />
 
                 <Row>
-                    <Col xs="4">
+                    <Col xs="12" md="4">
                         <Editor state={this.state} onChange={this.editState} />
                     </Col>
 
-                    <Col xs="8">
+                    <Col xs="12" md="8">
                         <Preview state={this.state} />
                     </Col>
                 </Row>
