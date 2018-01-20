@@ -77,6 +77,12 @@ class Editor extends React.Component {
                         onChange={this.handleChange}
                     />
                 </FormGroup>
+
+                <FormGroup>
+                    <Button color="secondary" onClick={this.props.onReset}>
+                        Reset
+                    </Button>
+                </FormGroup>
             </div>
         );
     }

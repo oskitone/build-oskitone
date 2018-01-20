@@ -1,4 +1,4 @@
-import { extend } from "lodash";
+import { extend } from "lodash/fp";
 import { Col, Container, Row } from "reactstrap";
 import Link from "next/link";
 import Editor from "../components/editor";
@@ -24,6 +24,7 @@ class Index extends React.Component {
         super(props);
         this.state = this.getLocalState();
         this.editState = this.editState.bind(this);
+        this.resetState = this.resetState.bind(this);
     }
 
     getLocalState = () => {
@@ -50,6 +51,10 @@ class Index extends React.Component {
         this.setState(newState);
     }
 
+    resetState() {
+        this.editState(this.defaultState);
+    }
+
     render() {
         return (
             <Container>
@@ -58,7 +63,11 @@ class Index extends React.Component {
 
                 <Row>
                     <Col xs="12" md="4">
-                        <Editor state={this.state} onChange={this.editState} />
+                        <Editor
+                            state={this.state}
+                            onChange={this.editState}
+                            onReset={this.resetState}
+                        />
                     </Col>
 
                     <Col xs="12" md="8">
