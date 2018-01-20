@@ -13,7 +13,7 @@ class Preview extends React.Component {
                     <thead>
                         <tr>
                             <td>Name</td>
-                            <td>Value</td>
+                            <td width="100%">Value</td>
                         </tr>
                     </thead>
                     <tbody>
