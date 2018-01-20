@@ -2,6 +2,11 @@ import Link from "next/link";
 import Head from "../components/head";
 import Preview from "../components/preview";
 
+import { Component } from "react";
+
+// ERROR: You may need an appropriate loader to handle this file type
+// import "bootstrap/dist/css/bootstrap.css";
+
 let synth = {
     vanityText: "OKAY",
     keyCount: 25,
