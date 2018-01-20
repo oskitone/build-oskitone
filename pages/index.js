@@ -43,7 +43,11 @@ class Index extends Component {
                     </Col>
                 </Row>
 
-                <style jsx>{``}</style>
+                <style jsx>{`
+                    :global(body) {
+                        margin: 1rem 0;
+                    }
+                `}</style>
             </Container>
         );
     }
