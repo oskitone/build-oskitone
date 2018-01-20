@@ -1,29 +1,52 @@
+import { extend } from "lodash";
+import { Col, Container, Row } from "reactstrap";
 import Link from "next/link";
+import Editor from "../components/editor";
 import Head from "../components/head";
 import Header from "../components/header";
 import Preview from "../components/preview";
-import Editor from "../components/editor";
 
 // ERROR: You may need an appropriate loader to handle this file type
 // import "bootstrap/dist/css/bootstrap.css";
 
-import { Col, Container, Row } from "reactstrap";
+const hasLocalStorage = typeof localStorage !== "undefined";
 
 class Index extends React.Component {
+    stateStorageKey = "STATE";
+    defaultState = {
+        vanityText: "OKAY",
+        keyCount: 15,
+        startingNoteIndex: 0,
+        color: "#ff0000"
+    };
+
     constructor(props) {
         super(props);
-
-        this.state = {
-            vanityText: "OKAY",
-            keyCount: 15,
-            startingNoteIndex: 0,
-            color: "#ff0000"
-        };
-
+        this.state = this.getLocalState();
         this.editState = this.editState.bind(this);
     }
 
+    getLocalState = () => {
+        return extend(
+            this.defaultState,
+            hasLocalStorage
+                ? JSON.parse(localStorage.getItem(this.stateStorageKey))
+                : {}
+        );
+    };
+
+    componentDidMount() {
+        this.setState(this.getLocalState());
+    }
+
     editState(newState = {}) {
+        if (hasLocalStorage) {
+            localStorage.setItem(
+                this.stateStorageKey,
+                JSON.stringify(extend(this.getLocalState(), newState))
+            );
+        }
+
         this.setState(newState);
     }
 

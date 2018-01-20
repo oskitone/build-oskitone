@@ -28,7 +28,7 @@ class Editor extends React.Component {
                         type="text"
                         name="vanityText"
                         id="vanityText"
-                        defaultValue={this.props.state.vanityText}
+                        value={this.props.state.vanityText}
                         onChange={this.handleChange}
                     />
                 </FormGroup>
@@ -39,7 +39,7 @@ class Editor extends React.Component {
                         type="select"
                         name="keyCount"
                         id="keyCount"
-                        defaultValue={this.props.state.keyCount}
+                        value={this.props.state.keyCount}
                         onChange={this.handleChange}
                     >
                         <option>8</option>
@@ -54,7 +54,7 @@ class Editor extends React.Component {
                         type="select"
                         name="startingNoteIndex"
                         id="startingNoteIndex"
-                        defaultValue={this.props.state.keyCount}
+                        value={this.props.state.startingNoteIndex}
                         onChange={this.handleChange}
                     >
                         <option value="0">C</option>
@@ -73,7 +73,7 @@ class Editor extends React.Component {
                         type="text"
                         name="color"
                         id="color"
-                        defaultValue={this.props.state.color}
+                        value={this.props.state.color}
                         onChange={this.handleChange}
                     />
                 </FormGroup>
