@@ -1,6 +1,6 @@
 const Preview = props => (
     <div>
-        <pre>{JSON.stringify(props.model, null, 4)}</pre>
+        <pre>{JSON.stringify(props.state, null, 4)}</pre>
 
         <style jsx>{`
             pre {
