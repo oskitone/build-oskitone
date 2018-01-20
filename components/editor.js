@@ -14,7 +14,7 @@ class Editor extends React.Component {
         let newState = {};
 
         if (this.props.state.hasOwnProperty(name)) {
-            newState[name] = isNaN(value) ? value : +value;
+            newState[name] = value;
             this.props.onChange(newState);
         }
     }
