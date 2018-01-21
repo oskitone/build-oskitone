@@ -163,8 +163,6 @@ class Preview extends React.Component {
                         ))}
                     </Layer>
                 </Stage>
-
-                <style jsx>{``}</style>
             </div>
         );
     }
