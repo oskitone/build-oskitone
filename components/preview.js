@@ -2,19 +2,17 @@ import { throttle } from "lodash";
 import { Stage, Layer, Rect, Text } from "react-konva";
 
 class Preview extends React.Component {
-    keyWidth = 20;
-    keyHeight = 60;
-
-    accidentalKeyWidth = this.keyWidth * 0.667;
-    accidentalKeyHeight = this.keyHeight * 0.5;
+    keyWidth = 14.24;
+    keyHeight = 45.72;
+    accidentalKeyWidth = 7.62;
+    accidentalKeyHeight = 22.86;
+    gutter = 5;
 
     constructor(props) {
         super(props);
 
         this.vanityText = props.state.vanityText;
         this.vanityTextHeight = 40;
-
-        this.gutter = 8;
 
         this.state = {
             stageWidth: 600,
@@ -119,11 +117,13 @@ class Preview extends React.Component {
                             width={enclosureWidth}
                             height={enclosureHeight}
                             stroke="black"
+                            strokeWidth={1}
+                            strokeScaleEnabled={false}
                         />
                     </Layer>
                     <Layer>
                         <Text
-                            text={state.vanityText}
+                            text={state.vanityText.toUpperCase()}
                             x={this.gutter}
                             y={this.gutter}
                             width={vanityTextWidth}
@@ -134,6 +134,8 @@ class Preview extends React.Component {
                             align="center"
                             fill="white"
                             stroke="black"
+                            strokeWidth={0.5}
+                            strokeScaleEnabled={false}
                         />
                     </Layer>
                     <Layer>
@@ -145,6 +147,8 @@ class Preview extends React.Component {
                                 width={val.width}
                                 height={val.height}
                                 stroke="black"
+                                strokeWidth={1}
+                                strokeScaleEnabled={false}
                                 fill="white"
                             />
                         ))}
@@ -158,6 +162,8 @@ class Preview extends React.Component {
                                 width={val.width}
                                 height={val.height}
                                 stroke="black"
+                                strokeWidth={1}
+                                strokeScaleEnabled={false}
                                 fill="black"
                             />
                         ))}

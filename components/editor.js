@@ -53,7 +53,7 @@ class ColorPicker extends React.Component {
                         <TwitterPicker
                             onChange={this.handleColorChange}
                             color={this.props.color}
-                            colors={["#15EAFD", "#FF69B4"]}
+                            colors={["#15EAFD", "#FF69B4", "#C7FF05"]}
                         />
                     </div>
                 ) : null}
@@ -102,22 +102,20 @@ class Editor extends React.Component {
                 </FormGroup>
 
                 <FormGroup>
-                    <Label for="keyCount">Key count</Label>
+                    <Label for="keyCount">Natural key count</Label>
                     <Input
-                        type="select"
+                        type="number"
+                        min="3"
+                        max="15"
                         name="keyCount"
                         id="keyCount"
                         value={this.props.state.keyCount}
                         onChange={this.handleChange}
-                    >
-                        <option>8</option>
-                        <option>12</option>
-                        <option>15</option>
-                    </Input>
+                    />
                 </FormGroup>
 
                 <FormGroup>
-                    <Label for="startingNoteIndex">Starting note index</Label>
+                    <Label for="startingNoteIndex">Starting note</Label>
                     <Input
                         type="select"
                         name="startingNoteIndex"

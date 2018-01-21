@@ -15,7 +15,7 @@ class Index extends React.Component {
     stateStorageKey = "STATE";
     defaultState = {
         vanityText: "OKAY",
-        keyCount: 15,
+        keyCount: 8,
         startingNoteIndex: 0,
         color: "#15eafd"
     };
