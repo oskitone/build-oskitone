@@ -17,7 +17,7 @@ class Index extends React.Component {
         vanityText: "OKAY",
         keyCount: 15,
         startingNoteIndex: 0,
-        color: "#ff0000"
+        color: "#15eafd"
     };
 
     constructor(props) {
