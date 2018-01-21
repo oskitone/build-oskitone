@@ -1,40 +1,168 @@
-import { Table } from "reactstrap";
+import { throttle } from "lodash";
+import { Stage, Layer, Rect, Text } from "react-konva";
 
 class Preview extends React.Component {
+    keyWidth = 20;
+    keyHeight = 60;
+
+    accidentalKeyWidth = this.keyWidth * 0.667;
+    accidentalKeyHeight = this.keyHeight * 0.5;
+
+    constructor(props) {
+        super(props);
+
+        this.vanityText = props.state.vanityText;
+        this.vanityTextHeight = 40;
+
+        this.gutter = 8;
+
+        this.state = {
+            stageWidth: 600,
+            stageHeight: 600
+        };
+
+        this.stageEl = null;
+
+        this.updateStageDimensions = throttle(
+            this.updateStageDimensions.bind(this),
+            200
+        );
+    }
+
+    getKeys(
+        keyCount = 0,
+        startingNoteIndex = 0,
+        includeNaturals = false,
+        includeAccidentals = false
+    ) {
+        let keys = [];
+
+        for (var i = 0; i < keyCount; i++) {
+            const x = i * this.keyWidth;
+
+            if (includeNaturals) {
+                keys.push({
+                    width: this.keyWidth,
+                    height: this.keyHeight,
+                    x: x
+                });
+            }
+
+            if (includeAccidentals) {
+                const nextIsAccidental =
+                    [2, 6].indexOf((i + startingNoteIndex) % 7) === -1;
+
+                if (nextIsAccidental && i < keyCount - 1) {
+                    keys.push({
+                        width: this.accidentalKeyWidth,
+                        height: this.accidentalKeyHeight,
+                        x: x + this.keyWidth - this.accidentalKeyWidth / 2
+                    });
+                }
+            }
+        }
+
+        return keys;
+    }
+
+    updateStageDimensions() {
+        this.setState({
+            stageWidth: this.stageEl.clientWidth,
+            stageHeight: this.stageEl.clientHeight
+        });
+    }
+
+    componentDidMount() {
+        this.updateStageDimensions();
+        window.addEventListener("resize", this.updateStageDimensions);
+    }
+
     render() {
-        const vanityText = this.props.state.vanityText;
-        const keyCount = this.props.state.keyCount;
-        const startingNoteIndex = this.props.state.startingNoteIndex;
-        const color = this.props.state.color;
+        const state = this.props.state;
+
+        const naturalKeys = this.getKeys(
+            state.keyCount,
+            parseInt(state.startingNoteIndex),
+            true,
+            false
+        );
+        const accidentalKeys = this.getKeys(
+            state.keyCount,
+            parseInt(state.startingNoteIndex),
+            false,
+            true
+        );
+
+        const vanityTextWidth = this.keyWidth * state.keyCount;
+
+        const enclosureWidth = state.keyCount * this.keyWidth + this.gutter * 2;
+        const enclosureHeight =
+            this.vanityTextHeight + this.keyHeight + this.gutter * 3;
+
+        const offset = 5;
+        const scale = Math.min(
+            (this.state.stageWidth - offset * 5) / enclosureWidth,
+            (this.state.stageHeight - offset * 5) / enclosureHeight
+        );
 
         return (
-            <div>
-                <Table hover bordered>
-                    <thead>
-                        <tr>
-                            <td>Name</td>
-                            <td width="100%">Value</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th>vanityText</th>
-                            <td>{vanityText}</td>
-                        </tr>
-                        <tr>
-                            <th>keyCount</th>
-                            <td>{keyCount}</td>
-                        </tr>
-                        <tr>
-                            <th>startingNoteIndex</th>
-                            <td>{startingNoteIndex}</td>
-                        </tr>
-                        <tr>
-                            <th>color</th>
-                            <td>{color}</td>
-                        </tr>
-                    </tbody>
-                </Table>
+            <div ref={el => (this.stageEl = el)}>
+                <Stage
+                    width={this.state.stageWidth}
+                    height={this.state.stageHeight}
+                    offset={{ x: -offset, y: -offset }}
+                    scale={{ x: scale, y: scale }}
+                >
+                    <Layer>
+                        <Rect
+                            fill={state.color}
+                            width={enclosureWidth}
+                            height={enclosureHeight}
+                            stroke="black"
+                        />
+                    </Layer>
+                    <Layer>
+                        <Text
+                            text={state.vanityText}
+                            x={this.gutter}
+                            y={this.gutter}
+                            width={vanityTextWidth}
+                            height={this.vanityTextHeight}
+                            fontSize={this.vanityTextHeight}
+                            fontFamily="Work Sans"
+                            fontStyle="900"
+                            align="center"
+                            fill="white"
+                            stroke="black"
+                        />
+                    </Layer>
+                    <Layer>
+                        {naturalKeys.map((val, i) => (
+                            <Rect
+                                key={i}
+                                x={this.gutter + val.x}
+                                y={this.vanityTextHeight + this.gutter * 2}
+                                width={val.width}
+                                height={val.height}
+                                stroke="black"
+                                fill="white"
+                            />
+                        ))}
+                    </Layer>
+                    <Layer>
+                        {accidentalKeys.map((val, i) => (
+                            <Rect
+                                key={i}
+                                x={this.gutter + val.x}
+                                y={this.vanityTextHeight + this.gutter * 2}
+                                width={val.width}
+                                height={val.height}
+                                stroke="black"
+                                fill="black"
+                            />
+                        ))}
+                    </Layer>
+                </Stage>
 
                 <style jsx>{``}</style>
             </div>
