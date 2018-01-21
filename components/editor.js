@@ -1,4 +1,12 @@
-import { Button, Form, FormGroup, FormText, Input, Label } from "reactstrap";
+import {
+    Col,
+    Button,
+    Form,
+    FormGroup,
+    FormText,
+    Input,
+    Label
+} from "reactstrap";
 import { TwitterPicker } from "react-color";
 
 class ColorPicker extends React.Component {
@@ -28,8 +36,7 @@ class ColorPicker extends React.Component {
     render() {
         const popover = {
             position: "absolute",
-            zIndex: "2",
-            left: "50%"
+            zIndex: "2"
         };
         const cover = {
             position: "fixed",
@@ -43,6 +50,7 @@ class ColorPicker extends React.Component {
                 <Input
                     onClick={this.handleClick}
                     value={this.props.color}
+                    size={this.props.size}
                     onChange={event =>
                         this.handleColorChange(event.target.value)
                     }
@@ -88,57 +96,78 @@ class Editor extends React.Component {
     }
 
     render() {
+        const cols = [5, 7];
         return (
             <div>
-                <FormGroup>
-                    <Label for="vanityText">Vanity text</Label>
-                    <Input
-                        type="text"
-                        name="vanityText"
-                        id="vanityText"
-                        value={this.props.state.vanityText}
-                        onChange={this.handleChange}
-                    />
+                <FormGroup row>
+                    <Label for="vanityText" xl={cols[0]} size="sm">
+                        Vanity text
+                    </Label>
+                    <Col xl={cols[1]}>
+                        <Input
+                            type="text"
+                            name="vanityText"
+                            id="vanityText"
+                            bsize="sm"
+                            value={this.props.state.vanityText}
+                            onChange={this.handleChange}
+                        />
+                    </Col>
                 </FormGroup>
 
-                <FormGroup>
-                    <Label for="keyCount">Natural key count</Label>
-                    <Input
-                        type="number"
-                        min="3"
-                        max="15"
-                        name="keyCount"
-                        id="keyCount"
-                        value={this.props.state.keyCount}
-                        onChange={this.handleChange}
-                    />
+                <FormGroup row>
+                    <Label for="keyCount" xl={cols[0]} size="sm">
+                        Natural key count
+                    </Label>
+                    <Col xl={cols[1]}>
+                        <Input
+                            type="number"
+                            min="3"
+                            max="15"
+                            name="keyCount"
+                            id="keyCount"
+                            bsize="sm"
+                            value={this.props.state.keyCount}
+                            onChange={this.handleChange}
+                        />
+                    </Col>
                 </FormGroup>
 
-                <FormGroup>
-                    <Label for="startingNoteIndex">Starting note</Label>
-                    <Input
-                        type="select"
-                        name="startingNoteIndex"
-                        id="startingNoteIndex"
-                        value={this.props.state.startingNoteIndex}
-                        onChange={this.handleChange}
-                    >
-                        <option value="0">C</option>
-                        <option value="1">D</option>
-                        <option value="2">E</option>
-                        <option value="3">F</option>
-                        <option value="4">G</option>
-                        <option value="5">A</option>
-                        <option value="6">B</option>
-                    </Input>
+                <FormGroup row>
+                    <Label for="startingNoteIndex" xl={cols[0]} size="sm">
+                        Starting note
+                    </Label>
+                    <Col xl={cols[1]}>
+                        <Input
+                            type="select"
+                            name="startingNoteIndex"
+                            id="startingNoteIndex"
+                            bsize="sm"
+                            value={this.props.state.startingNoteIndex}
+                            onChange={this.handleChange}
+                        >
+                            <option value="0">C</option>
+                            <option value="1">D</option>
+                            <option value="2">E</option>
+                            <option value="3">F</option>
+                            <option value="4">G</option>
+                            <option value="5">A</option>
+                            <option value="6">B</option>
+                        </Input>
+                    </Col>
                 </FormGroup>
 
-                <FormGroup>
-                    <Label for="color">Color</Label>
-                    <ColorPicker
-                        color={this.props.state.color}
-                        onChange={this.handleColorChange}
-                    />
+                <FormGroup row>
+                    <Label for="color" xl={cols[0]} size="sm">
+                        Color
+                    </Label>
+                    <Col xl={cols[1]}>
+                        <ColorPicker
+                            bsize="sm"
+                            color={this.props.state.color}
+                            onChange={this.handleColorChange}
+                        />
+                    </Col>
                 </FormGroup>
 
                 <FormGroup>
