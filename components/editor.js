@@ -1,10 +1,73 @@
 import { Button, Form, FormGroup, FormText, Input, Label } from "reactstrap";
+import { TwitterPicker } from "react-color";
+
+class ColorPicker extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            displayColorPicker: false,
+            color: props.color
+        };
+
+        this.handleColorChange = this.handleColorChange.bind(this);
+    }
+
+    handleClick = () => {
+        this.setState({ displayColorPicker: !this.state.displayColorPicker });
+    };
+
+    handleClose = () => {
+        this.setState({ displayColorPicker: false });
+    };
+
+    handleColorChange = (color, event) => {
+        this.props.onChange(color.hex);
+    };
+
+    render() {
+        const popover = {
+            position: "absolute",
+            zIndex: "2",
+            left: "50%"
+        };
+        const cover = {
+            position: "fixed",
+            top: "0px",
+            right: "0px",
+            bottom: "0px",
+            left: "0px"
+        };
+        return (
+            <div>
+                <Input
+                    onClick={this.handleClick}
+                    value={this.props.color}
+                    onChange={event =>
+                        this.handleColorChange(event.target.value)
+                    }
+                />
+                {this.state.displayColorPicker ? (
+                    <div style={popover}>
+                        <div style={cover} onClick={this.handleClose} />
+                        <TwitterPicker
+                            onChange={this.handleColorChange}
+                            color={this.props.color}
+                            colors={["#15EAFD", "#FF69B4"]}
+                        />
+                    </div>
+                ) : null}
+            </div>
+        );
+    }
+}
 
 class Editor extends React.Component {
     constructor(props) {
         super(props);
         this.state = props.state;
         this.handleChange = this.handleChange.bind(this);
+        this.handleColorChange = this.handleColorChange.bind(this);
     }
 
     handleChange(event) {
@@ -17,6 +80,11 @@ class Editor extends React.Component {
             newState[name] = value;
             this.props.onChange(newState);
         }
+    }
+
+    handleColorChange(color, event) {
+        console.log(color);
+        this.props.onChange({ color: color });
     }
 
     render() {
@@ -69,12 +137,9 @@ class Editor extends React.Component {
 
                 <FormGroup>
                     <Label for="color">Color</Label>
-                    <Input
-                        type="text"
-                        name="color"
-                        id="color"
-                        value={this.props.state.color}
-                        onChange={this.handleChange}
+                    <ColorPicker
+                        color={this.props.state.color}
+                        onChange={this.handleColorChange}
                     />
                 </FormGroup>
 

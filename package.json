@@ -10,6 +10,7 @@
     "konva": "^1.7.6",
     "next": "4.2.3",
     "react": "^16.2.0",
+    "react-color": "^2.13.8",
     "react-dom": "^16.2.0",
     "react-konva": "^1.6.5",
     "reactstrap": "^5.0.0-alpha.4"
