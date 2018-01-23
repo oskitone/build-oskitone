@@ -1,6 +1,52 @@
+import { extend } from "lodash/fp";
 import { times, throttle } from "lodash";
 import { Stage, Layer, Rect, Circle, Text } from "react-konva";
 import { COLOR, POSITION } from "../components/constants";
+
+class PreviewRect extends React.Component {
+    render(props) {
+        return (
+            <Rect
+                {...this.props}
+                stroke={this.props.stroke || COLOR.STROKE}
+                strokeWidth={
+                    isNaN(this.props.strokeWidth) ? 1 : this.props.strokeWidth
+                }
+                strokeScaleEnabled={false}
+            />
+        );
+    }
+}
+
+class PreviewCircle extends React.Component {
+    render(props) {
+        return (
+            <Circle
+                {...this.props}
+                stroke={this.props.stroke || COLOR.STROKE}
+                strokeWidth={
+                    isNaN(this.props.strokeWidth) ? 1 : this.props.strokeWidth
+                }
+                strokeScaleEnabled={false}
+            />
+        );
+    }
+}
+
+class PreviewText extends React.Component {
+    render(props) {
+        return (
+            <Text
+                {...this.props}
+                stroke={this.props.stroke || COLOR.STROKE}
+                strokeWidth={
+                    isNaN(this.props.strokeWidth) ? 1 : this.props.strokeWidth
+                }
+                strokeScaleEnabled={false}
+            />
+        );
+    }
+}
 
 class Preview extends React.Component {
     keyWidth = 14.24;
@@ -199,62 +245,47 @@ class Preview extends React.Component {
                     scale={{ x: scale, y: scale }}
                 >
                     <Layer>
-                        <Rect
+                        <PreviewRect
                             fill={state.color}
                             width={enclosureWidth}
                             height={enclosureHeight}
-                            stroke={COLOR.STROKE}
-                            strokeWidth={1}
-                            strokeScaleEnabled={false}
                         />
                     </Layer>
                     {controls.map((control, i) => (
                         <Layer key={i}>
-                            <Circle
+                            <PreviewCircle
                                 fill={COLOR.DARK}
                                 x={control.knob.x}
                                 y={control.knob.y}
                                 radius={control.knob.diameter / 2}
-                                stroke={COLOR.STROKE}
-                                strokeWidth={1}
-                                strokeScaleEnabled={false}
                             />
-                            <Rect
+                            <PreviewRect
                                 fill={COLOR.LIGHT}
                                 x={control.knob.marker.x}
                                 y={control.knob.marker.y}
                                 width={control.knob.marker.width}
                                 height={control.knob.marker.height}
-                                stroke={COLOR.STROKE}
-                                strokeWidth={1}
-                                strokeScaleEnabled={false}
                             />
-                            <Rect
+                            <PreviewRect
                                 fill={COLOR.DARK}
                                 x={control.label.x}
                                 y={control.label.y}
                                 width={control.label.width}
                                 height={control.label.height}
-                                stroke={COLOR.STROKE}
-                                strokeWidth={1}
-                                strokeScaleEnabled={false}
                             />
                         </Layer>
                     ))}
                     <Layer visible={!!state.speakerDiameter}>
-                        <Rect
+                        <PreviewRect
                             fill={COLOR.DARK}
                             x={enclosureWidth - this.gutter - speakerWidth}
                             y={this.gutter}
                             width={speakerWidth}
                             height={speakerHeight}
-                            stroke={COLOR.STROKE}
-                            strokeWidth={1}
-                            strokeScaleEnabled={false}
                         />
                     </Layer>
                     <Layer>
-                        <Text
+                        <PreviewText
                             text={state.vanityText.toUpperCase()}
                             x={this.gutter}
                             y={
@@ -264,41 +295,33 @@ class Preview extends React.Component {
                             width={vanityTextWidth}
                             height={vanityTextHeight}
                             fontSize={vanityTextFontSize}
-                            fontFamily="Work Sans"
-                            fontStyle="900"
-                            align="center"
+                            strokeWidth={1 / scale}
                             fill={COLOR.LIGHT}
-                            stroke={COLOR.STROKE}
-                            strokeWidth={0.5}
-                            strokeScaleEnabled={false}
+                            fontFamily={"Work Sans"}
+                            fontStyle={"900"}
+                            align={"center"}
                         />
                     </Layer>
                     <Layer>
                         {naturalKeys.map((val, i) => (
-                            <Rect
+                            <PreviewRect
                                 key={i}
                                 x={this.gutter + val.x}
                                 y={vanityTextHeight + this.gutter * 2}
                                 width={val.width}
                                 height={val.height}
-                                stroke={COLOR.STROKE}
-                                strokeWidth={1}
-                                strokeScaleEnabled={false}
                                 fill={COLOR.LIGHT}
                             />
                         ))}
                     </Layer>
                     <Layer>
                         {accidentalKeys.map((val, i) => (
-                            <Rect
+                            <PreviewRect
                                 key={i}
                                 x={this.gutter + val.x}
                                 y={vanityTextHeight + this.gutter * 2}
                                 width={val.width}
                                 height={val.height}
-                                stroke={COLOR.STROKE}
-                                strokeWidth={1}
-                                strokeScaleEnabled={false}
                                 fill={COLOR.DARK}
                             />
                         ))}
