@@ -1,5 +1,6 @@
 import { throttle } from "lodash";
 import { Stage, Layer, Rect, Text } from "react-konva";
+import { COLOR } from "../components/constants";
 
 class Preview extends React.Component {
     keyWidth = 14.24;
@@ -132,8 +133,8 @@ class Preview extends React.Component {
                             fontFamily="Work Sans"
                             fontStyle="900"
                             align="center"
-                            fill="white"
-                            stroke="black"
+                            fill={COLOR.LIGHT}
+                            stroke={COLOR.STROKE}
                             strokeWidth={0.5}
                             strokeScaleEnabled={false}
                         />
@@ -146,10 +147,10 @@ class Preview extends React.Component {
                                 y={this.vanityTextHeight + this.gutter * 2}
                                 width={val.width}
                                 height={val.height}
-                                stroke="black"
+                                stroke={COLOR.STROKE}
                                 strokeWidth={1}
                                 strokeScaleEnabled={false}
-                                fill="white"
+                                fill={COLOR.LIGHT}
                             />
                         ))}
                     </Layer>
@@ -161,10 +162,10 @@ class Preview extends React.Component {
                                 y={this.vanityTextHeight + this.gutter * 2}
                                 width={val.width}
                                 height={val.height}
-                                stroke="black"
+                                stroke={COLOR.STROKE}
                                 strokeWidth={1}
                                 strokeScaleEnabled={false}
-                                fill="black"
+                                fill={COLOR.DARK}
                             />
                         ))}
                     </Layer>

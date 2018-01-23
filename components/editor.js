@@ -8,6 +8,7 @@ import {
     Label
 } from "reactstrap";
 import { TwitterPicker } from "react-color";
+import { COLOR } from "../components/constants";
 
 class ColorPicker extends React.Component {
     constructor(props) {
@@ -61,7 +62,11 @@ class ColorPicker extends React.Component {
                         <TwitterPicker
                             onChange={this.handleColorChange}
                             color={this.props.color}
-                            colors={["#15EAFD", "#FF69B4", "#C7FF05"]}
+                            colors={[
+                                COLOR.AQUA_BLUE,
+                                COLOR.HOT_PINK,
+                                COLOR.APPLE_GREEN
+                            ]}
                         />
                     </div>
                 ) : null}
