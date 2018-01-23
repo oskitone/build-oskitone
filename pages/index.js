@@ -5,7 +5,7 @@ import Editor from "../components/editor";
 import Head from "../components/head";
 import Header from "../components/header";
 import Preview from "../components/preview";
-import { COLOR } from "../components/constants";
+import { COLOR, POSITION } from "../components/constants";
 
 // ERROR: You may need an appropriate loader to handle this file type
 // import "bootstrap/dist/css/bootstrap.css";
@@ -18,7 +18,10 @@ class Index extends React.Component {
         vanityText: "OKAY",
         keyCount: 8,
         startingNoteIndex: 0,
-        color: COLOR.AQUA_BLUE
+        color: COLOR.AQUA_BLUE,
+        speakerDiameter: 49.8,
+        knobsCount: 2,
+        controlsPosition: POSITION.AUTO
     };
 
     constructor(props) {

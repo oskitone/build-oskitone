@@ -8,7 +8,7 @@ import {
     Label
 } from "reactstrap";
 import { TwitterPicker } from "react-color";
-import { COLOR } from "../components/constants";
+import { COLOR, POSITION } from "../components/constants";
 
 class ColorPicker extends React.Component {
     constructor(props) {
@@ -158,6 +158,45 @@ class Editor extends React.Component {
                             <option value="4">G</option>
                             <option value="5">A</option>
                             <option value="6">B</option>
+                        </Input>
+                    </Col>
+                </FormGroup>
+
+                <FormGroup row>
+                    <Label for="startingNoteIndex" xl={cols[0]} size="sm">
+                        Control position
+                    </Label>
+                    <Col xl={cols[1]}>
+                        <Input
+                            type="select"
+                            name="controlPosition"
+                            id="controlPosition"
+                            bsize="sm"
+                            value={this.props.state.controlPosition}
+                            onChange={this.handleChange}
+                        >
+                            <option value={POSITION.AUTO}>Auto</option>
+                            <option value={POSITION.BACK}>Back</option>
+                            <option value={POSITION.RIGHT}>Right</option>
+                        </Input>
+                    </Col>
+                </FormGroup>
+
+                <FormGroup row>
+                    <Label for="startingNoteIndex" xl={cols[0]} size="sm">
+                        Speaker size
+                    </Label>
+                    <Col xl={cols[1]}>
+                        <Input
+                            type="select"
+                            name="speakerDiameter"
+                            id="speakerDiameter"
+                            bsize="sm"
+                            value={this.props.state.speakerDiameter}
+                            onChange={this.handleChange}
+                        >
+                            <option value="49.8">2" x 2"</option>
+                            <option value="">None</option>
                         </Input>
                     </Col>
                 </FormGroup>

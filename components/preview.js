@@ -1,19 +1,26 @@
-import { throttle } from "lodash";
-import { Stage, Layer, Rect, Text } from "react-konva";
-import { COLOR } from "../components/constants";
+import { times, throttle } from "lodash";
+import { Stage, Layer, Rect, Circle, Text } from "react-konva";
+import { COLOR, POSITION } from "../components/constants";
 
 class Preview extends React.Component {
     keyWidth = 14.24;
     keyHeight = 45.72;
     accidentalKeyWidth = 7.62;
     accidentalKeyHeight = 22.86;
+
     gutter = 5;
+    relatedGutter = 2;
+
+    knobDiameter = 22.4;
+    labelHeight = 5;
 
     constructor(props) {
         super(props);
 
         this.vanityText = props.state.vanityText;
-        this.vanityTextHeight = 40;
+
+        this.controlMinimumHeight =
+            this.knobDiameter + this.relatedGutter + this.labelHeight;
 
         this.state = {
             stageWidth: 600,
@@ -64,6 +71,41 @@ class Preview extends React.Component {
         return keys;
     }
 
+    getControls(knobsCount, startingX, startingY, availableHeight) {
+        const markerWidth = 2;
+        const radius = this.knobDiameter / 2;
+
+        let knobs = [];
+
+        for (var i = 0; i < knobsCount; i++) {
+            const x = startingX + i * (this.knobDiameter + this.gutter);
+            const y =
+                startingY + (availableHeight - this.controlMinimumHeight) / 2;
+
+            knobs.push({
+                knob: {
+                    x: x + radius,
+                    y: y + radius,
+                    diameter: this.knobDiameter,
+                    marker: {
+                        x: x + radius - markerWidth / 2,
+                        y: y,
+                        width: markerWidth,
+                        height: radius
+                    }
+                },
+                label: {
+                    x: x,
+                    y: y + this.knobDiameter + this.relatedGutter,
+                    width: this.knobDiameter,
+                    height: this.labelHeight
+                }
+            });
+        }
+
+        return knobs;
+    }
+
     updateStageDimensions() {
         this.setState({
             stageWidth: this.stageEl.clientWidth,
@@ -78,25 +120,69 @@ class Preview extends React.Component {
 
     render() {
         const state = this.props.state;
+        state.speakerDiameter = parseFloat(state.speakerDiameter) || 0;
+        state.startingNoteIndex = parseInt(state.startingNoteIndex);
+        state.controlPosition = parseInt(state.controlPosition);
 
         const naturalKeys = this.getKeys(
             state.keyCount,
-            parseInt(state.startingNoteIndex),
+            state.startingNoteIndex,
             true,
             false
         );
         const accidentalKeys = this.getKeys(
             state.keyCount,
-            parseInt(state.startingNoteIndex),
+            state.startingNoteIndex,
             false,
             true
         );
 
-        const vanityTextWidth = this.keyWidth * state.keyCount;
+        const speakerWidth = state.speakerDiameter;
+        const speakerHeight = state.speakerDiameter;
 
-        const enclosureWidth = state.keyCount * this.keyWidth + this.gutter * 2;
+        const controlPosition =
+            state.controlPosition === POSITION.AUTO
+                ? state.keyCount > 8 ? POSITION.BACK : POSITION.RIGHT
+                : state.controlPosition;
+
+        const vanityTextWidth =
+            this.keyWidth * state.keyCount -
+            (controlPosition === POSITION.BACK
+                ? (!!state.speakerDiameter ? this.gutter + speakerWidth : 0) +
+                  state.knobsCount * (this.knobDiameter + this.gutter)
+                : 0);
+        const vanityTextHeight =
+            controlPosition === POSITION.BACK
+                ? state.speakerDiameter || 40
+                : speakerHeight + this.controlMinimumHeight - this.keyHeight;
+        const vanityTextFontSize = Math.min(
+            vanityTextHeight,
+            vanityTextWidth / state.vanityText.length
+        );
+
+        const controls = this.getControls(
+            state.knobsCount,
+            controlPosition === POSITION.BACK
+                ? this.gutter * 2 + vanityTextWidth
+                : state.keyCount * this.keyWidth + this.gutter * 2,
+            controlPosition === POSITION.BACK
+                ? this.gutter
+                : this.gutter * 2 + speakerWidth,
+            controlPosition === POSITION.BACK
+                ? Math.max(speakerHeight, vanityTextHeight)
+                : this.knobDiameter + this.relatedGutter + this.labelHeight
+        );
+
+        const enclosureWidth =
+            state.keyCount * this.keyWidth +
+            this.gutter * 2 +
+            (controlPosition === POSITION.BACK
+                ? 0
+                : speakerWidth > 0
+                  ? speakerWidth + this.gutter
+                  : this.knobDiameter * 2 + this.gutter * 2);
         const enclosureHeight =
-            this.vanityTextHeight + this.keyHeight + this.gutter * 3;
+            vanityTextHeight + this.keyHeight + this.gutter * 3;
 
         const offset = 5;
         const scale = Math.min(
@@ -117,7 +203,52 @@ class Preview extends React.Component {
                             fill={state.color}
                             width={enclosureWidth}
                             height={enclosureHeight}
-                            stroke="black"
+                            stroke={COLOR.STROKE}
+                            strokeWidth={1}
+                            strokeScaleEnabled={false}
+                        />
+                    </Layer>
+                    {controls.map((control, i) => (
+                        <Layer key={i}>
+                            <Circle
+                                fill={COLOR.DARK}
+                                x={control.knob.x}
+                                y={control.knob.y}
+                                radius={control.knob.diameter / 2}
+                                stroke={COLOR.STROKE}
+                                strokeWidth={1}
+                                strokeScaleEnabled={false}
+                            />
+                            <Rect
+                                fill={COLOR.LIGHT}
+                                x={control.knob.marker.x}
+                                y={control.knob.marker.y}
+                                width={control.knob.marker.width}
+                                height={control.knob.marker.height}
+                                stroke={COLOR.STROKE}
+                                strokeWidth={1}
+                                strokeScaleEnabled={false}
+                            />
+                            <Rect
+                                fill={COLOR.DARK}
+                                x={control.label.x}
+                                y={control.label.y}
+                                width={control.label.width}
+                                height={control.label.height}
+                                stroke={COLOR.STROKE}
+                                strokeWidth={1}
+                                strokeScaleEnabled={false}
+                            />
+                        </Layer>
+                    ))}
+                    <Layer visible={!!state.speakerDiameter}>
+                        <Rect
+                            fill={COLOR.DARK}
+                            x={enclosureWidth - this.gutter - speakerWidth}
+                            y={this.gutter}
+                            width={speakerWidth}
+                            height={speakerHeight}
+                            stroke={COLOR.STROKE}
                             strokeWidth={1}
                             strokeScaleEnabled={false}
                         />
@@ -126,10 +257,13 @@ class Preview extends React.Component {
                         <Text
                             text={state.vanityText.toUpperCase()}
                             x={this.gutter}
-                            y={this.gutter}
+                            y={
+                                this.gutter +
+                                (vanityTextHeight - vanityTextFontSize) / 2
+                            }
                             width={vanityTextWidth}
-                            height={this.vanityTextHeight}
-                            fontSize={this.vanityTextHeight}
+                            height={vanityTextHeight}
+                            fontSize={vanityTextFontSize}
                             fontFamily="Work Sans"
                             fontStyle="900"
                             align="center"
@@ -144,7 +278,7 @@ class Preview extends React.Component {
                             <Rect
                                 key={i}
                                 x={this.gutter + val.x}
-                                y={this.vanityTextHeight + this.gutter * 2}
+                                y={vanityTextHeight + this.gutter * 2}
                                 width={val.width}
                                 height={val.height}
                                 stroke={COLOR.STROKE}
@@ -159,7 +293,7 @@ class Preview extends React.Component {
                             <Rect
                                 key={i}
                                 x={this.gutter + val.x}
-                                y={this.vanityTextHeight + this.gutter * 2}
+                                y={vanityTextHeight + this.gutter * 2}
                                 width={val.width}
                                 height={val.height}
                                 stroke={COLOR.STROKE}
