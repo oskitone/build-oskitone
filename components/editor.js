@@ -128,7 +128,7 @@ class Editor extends React.Component {
                         <Input
                             type="number"
                             min="3"
-                            max="15"
+                            max="22"
                             name="keyCount"
                             id="keyCount"
                             bsize="sm"
