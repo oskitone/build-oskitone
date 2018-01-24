@@ -34,10 +34,67 @@ class PreviewCircle extends React.Component {
 }
 
 class PreviewText extends React.Component {
-    render(props) {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            fontSize: this.props.fontSize,
+            text: this.props.text,
+            x: this.props.x,
+            y: this.props.y
+        };
+    }
+
+    hasRoom() {
+        return this.props.fillWidth > 0 && this.props.fillHeight > 0;
+    }
+
+    isDynamic() {
+        return this.instance && this.props.fillWidth && this.props.fillHeight;
+    }
+
+    componentDidUpdate() {
+        if (this.hasRoom() && this.isDynamic()) {
+            const fontSize = Math.floor(
+                this.instance.getFontSize() *
+                    Math.min(
+                        this.props.fillWidth / this.instance.getWidth(),
+                        this.props.fillHeight / this.instance.getHeight()
+                    )
+            );
+            const x =
+                this.props.x +
+                Math.round(
+                    (this.props.fillWidth - this.instance.getWidth()) / 2
+                );
+            const y =
+                this.props.y +
+                Math.round(
+                    (this.props.fillHeight - this.instance.getHeight()) / 2
+                );
+
+            if (
+                fontSize !== this.state.fontSize ||
+                x !== this.state.x ||
+                y !== this.state.y
+            ) {
+                this.setState({
+                    fontSize: fontSize,
+                    x: x,
+                    y: y
+                });
+            }
+        }
+    }
+
+    render() {
         return (
             <Text
                 {...this.props}
+                ref={el => (this.instance = el)}
+                x={this.state.x}
+                y={this.state.y}
+                fontSize={this.state.fontSize}
                 stroke={this.props.stroke || COLOR.STROKE}
                 strokeWidth={
                     isNaN(this.props.strokeWidth) ? 1 : this.props.strokeWidth
@@ -201,10 +258,6 @@ class Preview extends React.Component {
             controlPosition === POSITION.BACK
                 ? state.speakerDiameter || 40
                 : speakerHeight + this.controlMinimumHeight - this.keyHeight;
-        const vanityTextFontSize = Math.min(
-            vanityTextHeight,
-            vanityTextWidth / state.vanityText.length
-        );
 
         const controls = this.getControls(
             state.knobsCount,
@@ -288,13 +341,9 @@ class Preview extends React.Component {
                         <PreviewText
                             text={state.vanityText.toUpperCase()}
                             x={this.gutter}
-                            y={
-                                this.gutter +
-                                (vanityTextHeight - vanityTextFontSize) / 2
-                            }
-                            width={vanityTextWidth}
-                            height={vanityTextHeight}
-                            fontSize={vanityTextFontSize}
+                            y={this.gutter}
+                            fillWidth={vanityTextWidth}
+                            fillHeight={vanityTextHeight}
                             strokeWidth={1 / scale}
                             fill={COLOR.LIGHT}
                             fontFamily={"Work Sans"}
