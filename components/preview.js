@@ -55,13 +55,14 @@ class PreviewText extends React.Component {
 
     componentDidUpdate() {
         if (this.hasRoom() && this.isDynamic()) {
-            const fontSize = Math.floor(
-                this.instance.getFontSize() *
-                    Math.min(
-                        this.props.fillWidth / this.instance.getWidth(),
-                        this.props.fillHeight / this.instance.getHeight()
-                    )
-            );
+            const fontSize =
+                Math.floor(
+                    this.instance.getFontSize() *
+                        Math.min(
+                            this.props.fillWidth / this.instance.getWidth(),
+                            this.props.fillHeight / this.instance.getHeight()
+                        )
+                ) || 1;
             const x =
                 this.props.x +
                 Math.round(
