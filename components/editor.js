@@ -196,7 +196,7 @@ class Editor extends React.Component {
                             onChange={this.handleChange}
                         >
                             <option value="49.8">2" x 2"</option>
-                            <option value="">None</option>
+                            <option value="0">None</option>
                         </Input>
                     </Col>
                 </FormGroup>
