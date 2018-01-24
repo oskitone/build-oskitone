@@ -21,7 +21,7 @@ class Index extends React.Component {
         color: COLOR.AQUA_BLUE,
         speakerDiameter: 49.8,
         knobsCount: 2,
-        controlsPosition: POSITION.AUTO
+        controlPosition: POSITION.AUTO
     };
 
     constructor(props) {
