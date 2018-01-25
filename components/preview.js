@@ -51,10 +51,22 @@ class PreviewText extends React.Component {
     }
 
     isDynamic() {
-        return this.instance && this.props.fillWidth && this.props.fillHeight;
+        return (
+            this.instance &&
+            this.props.fillWidth > 0 &&
+            this.props.fillHeight > 0
+        );
+    }
+
+    componentDidMount() {
+        this.updateSizeAndPlacement(true);
     }
 
     componentDidUpdate() {
+        this.updateSizeAndPlacement();
+    }
+
+    updateSizeAndPlacement(forceUpdate = false) {
         if (this.hasRoom() && this.isDynamic()) {
             const fontSize =
                 Math.floor(
@@ -75,11 +87,13 @@ class PreviewText extends React.Component {
                     (this.props.fillHeight - this.instance.getHeight()) / 2
                 );
 
-            if (
+            const shouldUpdate =
                 fontSize !== this.state.fontSize ||
                 x !== this.state.x ||
-                y !== this.state.y
-            ) {
+                y !== this.state.y ||
+                forceUpdate;
+
+            if (shouldUpdate) {
                 this.setState({
                     fontSize: fontSize,
                     x: x,
