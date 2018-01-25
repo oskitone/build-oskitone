@@ -1,6 +1,7 @@
 import { extend } from "lodash/fp";
 import { times, throttle } from "lodash";
 import { Stage, Layer, Rect, Circle, Text } from "react-konva";
+import { Alert } from "reactstrap";
 import { COLOR, POSITION } from "../components/constants";
 
 class PreviewRect extends React.Component {
@@ -213,10 +214,12 @@ class Preview extends React.Component {
     }
 
     updateStageDimensions() {
-        this.setState({
-            stageWidth: this.stageEl.clientWidth,
-            stageHeight: this.stageEl.clientHeight
-        });
+        if (!!this.stageEl) {
+            this.setState({
+                stageWidth: this.stageEl.clientWidth,
+                stageHeight: this.stageEl.clientHeight
+            });
+        }
     }
 
     componentDidMount() {
@@ -307,6 +310,15 @@ class Preview extends React.Component {
             (this.state.stageWidth - offset * 5) / enclosureWidth,
             (this.state.stageHeight - offset * 5) / enclosureHeight
         );
+
+        if (!state.valid) {
+            return (
+                <Alert color="danger">
+                    <h4 className="alert-heading">Input Error!</h4>
+                    <p className="mb-0">Check form values, please.</p>
+                </Alert>
+            );
+        }
 
         return (
             <div ref={el => (this.stageEl = el)}>

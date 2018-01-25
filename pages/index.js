@@ -21,7 +21,8 @@ class Index extends React.Component {
         color: COLOR.AQUA_BLUE,
         speakerDiameter: 49.8,
         knobsCount: 2,
-        controlPosition: POSITION.AUTO
+        controlPosition: POSITION.AUTO,
+        valid: true
     };
 
     constructor(props) {
@@ -42,6 +43,13 @@ class Index extends React.Component {
 
     componentDidMount() {
         this.setState(this.getLocalState());
+        this.updateValidState();
+    }
+
+    updateValidState() {
+        const state = this.state;
+        const valid = this.state.keyCount >= 3 && this.state.keyCount <= 22;
+        this.setState({ valid: valid });
     }
 
     editState(newState = {}) {
@@ -52,7 +60,7 @@ class Index extends React.Component {
             );
         }
 
-        this.setState(newState);
+        this.setState(newState, this.updateValidState);
     }
 
     resetState() {
