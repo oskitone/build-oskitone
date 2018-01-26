@@ -290,13 +290,6 @@ class Preview extends React.Component {
             this.minimumVanityTextHeight
         );
 
-        const keyY = hasVanityText
-            ? vanityTextHeight + this.gutter * 2
-            : controlPosition === POSITION.BACK
-              ? Math.max(speakerHeight, this.controlMinimumHeight) +
-                this.gutter * 2
-              : this.gutter;
-
         const controls = this.getControls(
             state.knobsCount,
             controlPosition === POSITION.BACK
@@ -319,12 +312,26 @@ class Preview extends React.Component {
                   ? speakerWidth + this.gutter
                   : this.knobDiameter * 2 + this.gutter * 2);
         const enclosureHeight =
-            this.keyHeight +
-            this.gutter * 2 +
-            (controlPosition === POSITION.BACK
-                ? Math.max(speakerHeight, this.controlMinimumHeight) +
+            controlPosition === POSITION.BACK
+                ? this.keyHeight +
+                  this.gutter * 2 +
+                  Math.max(speakerHeight, this.controlMinimumHeight) +
                   this.gutter
-                : hasVanityText ? vanityTextHeight + this.gutter : 0);
+                : hasVanityText
+                  ? vanityTextHeight + this.keyHeight + this.gutter * 3
+                  : speakerHeight > 0
+                    ? speakerHeight +
+                      this.controlMinimumHeight +
+                      this.gutter * 3
+                    : Math.max(
+                          this.keyHeight,
+                          speakerHeight +
+                              this.gutter +
+                              this.controlMinimumHeight
+                      ) +
+                      this.gutter * 2;
+
+        const keyY = enclosureHeight - this.keyHeight - this.gutter;
 
         const offset = 5;
         const scale = Math.min(
