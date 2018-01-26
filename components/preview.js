@@ -2,7 +2,14 @@ import { extend } from "lodash/fp";
 import { times, throttle } from "lodash";
 import { Stage, Layer, Rect, Circle, Text } from "react-konva";
 import { Alert } from "reactstrap";
-import { COLOR, POSITION } from "../components/constants";
+import {
+    COLOR,
+    ENCLOSURE,
+    HARDWARE,
+    KEY,
+    LABEL,
+    POSITION
+} from "../components/constants";
 
 class PreviewRect extends React.Component {
     render(props) {
@@ -122,16 +129,16 @@ class PreviewText extends React.Component {
 }
 
 class Preview extends React.Component {
-    keyWidth = 14.24;
-    keyHeight = 45.72;
-    accidentalKeyWidth = 7.62;
-    accidentalKeyHeight = 22.86;
+    keyWidth = KEY.WIDTH;
+    keyHeight = KEY.HEIGHT;
+    accidentalKeyWidth = KEY.ACCIDENTAL_WIDTH;
+    accidentalKeyHeight = KEY.ACCIDENTAL_HEIGHT;
 
-    gutter = 5;
-    relatedGutter = 2;
+    gutter = ENCLOSURE.GUTTER;
+    relatedGutter = ENCLOSURE.RELATED_GUTTER;
 
-    knobDiameter = 22.4;
-    labelHeight = 5;
+    knobDiameter = HARDWARE.KNOB_DIAMETER;
+    labelHeight = LABEL.HEIGHT;
 
     minimumVanityTextHeight = 10;
 

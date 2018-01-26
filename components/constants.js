@@ -14,4 +14,24 @@ const COLOR = {
     APPLE_GREEN: "#C7FF05"
 };
 
-export { POSITION, COLOR };
+const HARDWARE = {
+    KNOB_DIAMETER: 22.4
+};
+
+const ENCLOSURE = {
+    GUTTER: 5,
+    RELATED_GUTTER: 2
+};
+
+const KEY = {
+    WIDTH: 14.24,
+    HEIGHT: 45.72,
+    ACCIDENTAL_WIDTH: 7.62,
+    ACCIDENTAL_HEIGHT: 22.86
+};
+
+const LABEL = {
+    HEIGHT: 5
+};
+
+export { COLOR, ENCLOSURE, HARDWARE, KEY, LABEL, POSITION };

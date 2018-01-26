@@ -5,7 +5,14 @@ import Editor from "../components/editor";
 import Head from "../components/head";
 import Header from "../components/header";
 import Preview from "../components/preview";
-import { COLOR, POSITION } from "../components/constants";
+import {
+    COLOR,
+    ENCLOSURE,
+    HARDWARE,
+    KEY,
+    LABEL,
+    POSITION
+} from "../components/constants";
 
 // ERROR: You may need an appropriate loader to handle this file type
 // import "bootstrap/dist/css/bootstrap.css";
