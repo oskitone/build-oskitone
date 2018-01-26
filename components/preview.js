@@ -4,6 +4,7 @@ import { Stage, Layer, Rect, Circle, Text } from "react-konva";
 import { Alert } from "reactstrap";
 import {
     COLOR,
+    CONTROL,
     ENCLOSURE,
     HARDWARE,
     KEY,
@@ -140,15 +141,10 @@ class Preview extends React.Component {
     knobDiameter = HARDWARE.KNOB_DIAMETER;
     labelHeight = LABEL.HEIGHT;
 
-    minimumVanityTextHeight = 10;
-
     constructor(props) {
         super(props);
 
         this.vanityText = props.state.vanityText;
-
-        this.controlMinimumHeight =
-            this.knobDiameter + this.relatedGutter + this.labelHeight;
 
         this.state = {
             stageWidth: 600,
@@ -208,7 +204,7 @@ class Preview extends React.Component {
         for (var i = 0; i < knobsCount; i++) {
             const x = startingX + i * (this.knobDiameter + this.gutter);
             const y =
-                startingY + (availableHeight - this.controlMinimumHeight) / 2;
+                startingY + (availableHeight - CONTROL.MINIMUM_HEIGHT) / 2;
 
             knobs.push({
                 knob: {
@@ -269,74 +265,36 @@ class Preview extends React.Component {
             true
         );
 
-        const speakerWidth = state.speakerDiameter;
-        const speakerHeight = state.speakerDiameter;
-
         const controlPosition =
             state.controlPosition === POSITION.AUTO
                 ? state.keyCount > 8 ? POSITION.BACK : POSITION.RIGHT
                 : state.controlPosition;
 
-        const vanityTextWidth =
-            this.keyWidth * state.keyCount -
-            (controlPosition === POSITION.BACK
-                ? (!!state.speakerDiameter ? this.gutter + speakerWidth : 0) +
-                  state.knobsCount * (this.knobDiameter + this.gutter)
-                : 0);
-        const vanityTextHeight = Math.max(
-            controlPosition === POSITION.BACK
-                ? Math.max(state.speakerDiameter, this.controlMinimumHeight)
-                : speakerHeight + this.controlMinimumHeight - this.keyHeight,
-            this.minimumVanityTextHeight
-        );
-
         const controls = this.getControls(
             state.knobsCount,
             controlPosition === POSITION.BACK
-                ? this.gutter * 2 + vanityTextWidth
+                ? this.gutter * 2 + state.vanityTextDimensions.width
                 : state.keyCount * this.keyWidth + this.gutter * 2,
             controlPosition === POSITION.BACK
                 ? this.gutter
-                : this.gutter * 2 + speakerWidth,
+                : this.gutter * 2 + state.speakerDiameter,
             controlPosition === POSITION.BACK
-                ? Math.max(speakerHeight, vanityTextHeight)
+                ? Math.max(
+                      state.speakerDiameter,
+                      state.vanityTextDimensions.height
+                  )
                 : this.knobDiameter + this.relatedGutter + this.labelHeight
         );
 
-        const enclosureWidth =
-            state.keyCount * this.keyWidth +
-            this.gutter * 2 +
-            (controlPosition === POSITION.BACK
-                ? 0
-                : speakerWidth > 0
-                  ? speakerWidth + this.gutter
-                  : this.knobDiameter * 2 + this.gutter * 2);
-        const enclosureHeight =
-            controlPosition === POSITION.BACK
-                ? this.keyHeight +
-                  this.gutter * 2 +
-                  Math.max(speakerHeight, this.controlMinimumHeight) +
-                  this.gutter
-                : hasVanityText
-                  ? vanityTextHeight + this.keyHeight + this.gutter * 3
-                  : speakerHeight > 0
-                    ? speakerHeight +
-                      this.controlMinimumHeight +
-                      this.gutter * 3
-                    : Math.max(
-                          this.keyHeight,
-                          speakerHeight +
-                              this.gutter +
-                              this.controlMinimumHeight
-                      ) +
-                      this.gutter * 2;
-
-        const keyY = enclosureHeight - this.keyHeight - this.gutter;
+        const keyY =
+            state.enclosureDimensions.height - this.keyHeight - this.gutter;
 
         const offset = 5;
         const scale = Math.min(
-            (this.state.stageWidth - offset * 5) / enclosureWidth,
-            (this.state.stageHeight - offset * 5) / enclosureHeight
+            (this.state.stageWidth - offset * 5) /
+                state.enclosureDimensions.width,
+            (this.state.stageHeight - offset * 5) /
+                state.enclosureDimensions.height
         );
 
         if (!state.valid) {
@@ -359,8 +317,8 @@ class Preview extends React.Component {
                     <Layer>
                         <PreviewRect
                             fill={state.color}
-                            width={enclosureWidth}
-                            height={enclosureHeight}
+                            width={state.enclosureDimensions.width}
+                            height={state.enclosureDimensions.height}
                         />
                     </Layer>
                     {controls.map((control, i) => (
@@ -390,10 +348,14 @@ class Preview extends React.Component {
                     <Layer visible={!!state.speakerDiameter}>
                         <PreviewRect
                             fill={COLOR.DARK}
-                            x={enclosureWidth - this.gutter - speakerWidth}
+                            x={
+                                state.enclosureDimensions.width -
+                                this.gutter -
+                                state.speakerDiameter
+                            }
                             y={this.gutter}
-                            width={speakerWidth}
-                            height={speakerHeight}
+                            width={state.speakerDiameter}
+                            height={state.speakerDiameter}
                         />
                     </Layer>
                     <Layer>
@@ -401,8 +363,8 @@ class Preview extends React.Component {
                             text={state.vanityText.toUpperCase()}
                             x={this.gutter}
                             y={this.gutter}
-                            fillWidth={vanityTextWidth}
-                            fillHeight={vanityTextHeight}
+                            fillWidth={state.vanityTextDimensions.width}
+                            fillHeight={state.vanityTextDimensions.height}
                             strokeWidth={1 / scale}
                             fill={COLOR.LIGHT}
                             fontFamily={"Work Sans"}

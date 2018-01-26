@@ -7,6 +7,7 @@ import Header from "../components/header";
 import Preview from "../components/preview";
 import {
     COLOR,
+    CONTROL,
     ENCLOSURE,
     HARDWARE,
     KEY,
@@ -32,21 +33,32 @@ class Index extends React.Component {
         controlPosition: POSITION.AUTO,
         valid: true,
         minimumKeyCount: 3,
-        maximumKeyCount: 88
+        maximumKeyCount: 88,
+        enclosureDimensions: { width: undefined, height: undefined },
+        vanityTextDimensions: { width: undefined, height: undefined }
     };
+
+    constructor(props) {
+        super(props);
+
+        this.vanityTextMinimumWidth =
+            KEY.WIDTH * this.defaultState.minimumKeyCount;
+        this.minimumVanityTextHeight = 10;
+
+        this.state = this.getLocalState();
+        this.editState = this.editState.bind(this);
+        this.resetState = this.resetState.bind(this);
+    }
 
     getMinimumKeyCount() {
         function possibleGutter(width) {
             return width > 0 ? ENCLOSURE.GUTTER : 0;
         }
 
-        const vanityTextMinimumWidth =
-            KEY.WIDTH * this.defaultState.minimumKeyCount;
-
         let width = 0;
 
         if (this.state.vanityText.length > 0) {
-            width += vanityTextMinimumWidth;
+            width += this.vanityTextMinimumWidth;
         }
 
         if (this.state.controlPosition === POSITION.BACK) {
@@ -70,11 +82,70 @@ class Index extends React.Component {
         return this.defaultState.maximumKeyCount;
     }
 
-    constructor(props) {
-        super(props);
-        this.state = this.getLocalState();
-        this.editState = this.editState.bind(this);
-        this.resetState = this.resetState.bind(this);
+    getControlPosition() {
+        return this.state.controlPosition === POSITION.AUTO
+            ? this.state.keyCount > 8 ? POSITION.BACK : POSITION.RIGHT
+            : this.state.controlPosition;
+    }
+
+    getVanityTextDimensions() {
+        const state = this.state;
+
+        return {
+            width:
+                KEY.WIDTH * state.keyCount -
+                (this.getControlPosition() === POSITION.BACK
+                    ? (state.speakerDiameter > 0
+                          ? ENCLOSURE.GUTTER + state.speakerDiameter
+                          : 0) +
+                      state.knobsCount *
+                          (HARDWARE.KNOB_DIAMETER + ENCLOSURE.GUTTER)
+                    : 0),
+            height: Math.max(
+                this.getControlPosition() === POSITION.BACK
+                    ? Math.max(state.speakerDiameter, CONTROL.MINIMUM_HEIGHT)
+                    : state.speakerDiameter +
+                      CONTROL.MINIMUM_HEIGHT -
+                      KEY.HEIGHT,
+                this.minimumVanityTextHeight
+            )
+        };
+    }
+
+    getEnclosureDimensions() {
+        const state = this.state;
+
+        return {
+            width:
+                state.keyCount * KEY.WIDTH +
+                ENCLOSURE.GUTTER * 2 +
+                (this.getControlPosition() === POSITION.BACK
+                    ? 0
+                    : state.speakerDiameter > 0
+                      ? state.speakerDiameter + ENCLOSURE.GUTTER
+                      : HARDWARE.KNOB_DIAMETER * 2 + ENCLOSURE.GUTTER * 2),
+            height:
+                this.getControlPosition() === POSITION.BACK
+                    ? KEY.HEIGHT +
+                      ENCLOSURE.GUTTER * 2 +
+                      Math.max(state.speakerDiameter, CONTROL.MINIMUM_HEIGHT) +
+                      ENCLOSURE.GUTTER
+                    : state.vanityText.length > 0
+                      ? this.getVanityTextDimensions().height +
+                        KEY.HEIGHT +
+                        ENCLOSURE.GUTTER * 3
+                      : state.speakerDiameter > 0
+                        ? state.speakerDiameter +
+                          CONTROL.MINIMUM_HEIGHT +
+                          ENCLOSURE.GUTTER * 3
+                        : Math.max(
+                              KEY.HEIGHT,
+                              state.speakerDiameter +
+                                  ENCLOSURE.GUTTER +
+                                  CONTROL.MINIMUM_HEIGHT
+                          ) +
+                          ENCLOSURE.GUTTER * 2
+        };
     }
 
     getLocalState = () => {
@@ -89,6 +160,7 @@ class Index extends React.Component {
     componentDidMount() {
         this.setState(this.getLocalState());
         this.updateMinimumKeyCountAndValidity();
+        this.updateEnclosureDimensions();
     }
 
     updateMinimumKeyCountAndValidity() {
@@ -106,6 +178,15 @@ class Index extends React.Component {
         });
     }
 
+    updateEnclosureDimensions() {
+        if (this.state.valid) {
+            this.setState({
+                enclosureDimensions: this.getEnclosureDimensions(),
+                vanityTextDimensions: this.getVanityTextDimensions()
+            });
+        }
+    }
+
     editState(newState = {}) {
         if (hasLocalStorage) {
             localStorage.setItem(
@@ -114,7 +195,10 @@ class Index extends React.Component {
             );
         }
 
-        this.setState(newState, this.updateMinimumKeyCountAndValidity);
+        this.setState(newState, () => {
+            this.updateMinimumKeyCountAndValidity();
+            this.updateEnclosureDimensions();
+        });
     }
 
     resetState() {
