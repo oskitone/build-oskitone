@@ -21,6 +21,7 @@ const hasLocalStorage = typeof localStorage !== "undefined";
 
 class Index extends React.Component {
     stateStorageKey = "STATE";
+
     defaultState = {
         vanityText: "OKAY",
         keyCount: 8,
@@ -29,8 +30,45 @@ class Index extends React.Component {
         speakerDiameter: 49.8,
         knobsCount: 2,
         controlPosition: POSITION.AUTO,
-        valid: true
+        valid: true,
+        minimumKeyCount: 3,
+        maximumKeyCount: 88
     };
+
+    getMinimumKeyCount() {
+        function possibleGutter(width) {
+            return width > 0 ? ENCLOSURE.GUTTER : 0;
+        }
+
+        const vanityTextMinimumWidth =
+            KEY.WIDTH * this.defaultState.minimumKeyCount;
+
+        let width = 0;
+
+        if (this.state.vanityText.length > 0) {
+            width += vanityTextMinimumWidth;
+        }
+
+        if (this.state.controlPosition === POSITION.BACK) {
+            width += possibleGutter(width) + this.state.speakerDiameter;
+
+            if (this.state.knobsCount >= 0) {
+                width +=
+                    possibleGutter(width) +
+                    HARDWARE.KNOB_DIAMETER * this.state.knobsCount +
+                    ENCLOSURE.GUTTER * (this.state.knobsCount - 1);
+            }
+        }
+
+        return Math.max(
+            Math.ceil(width / KEY.WIDTH),
+            this.defaultState.minimumKeyCount
+        );
+    }
+
+    getMaximumKeyCount() {
+        return this.defaultState.maximumKeyCount;
+    }
 
     constructor(props) {
         super(props);
@@ -50,13 +88,22 @@ class Index extends React.Component {
 
     componentDidMount() {
         this.setState(this.getLocalState());
-        this.updateValidState();
+        this.updateMinimumKeyCountAndValidity();
     }
 
-    updateValidState() {
-        const state = this.state;
-        const valid = this.state.keyCount >= 3 && this.state.keyCount <= 22;
-        this.setState({ valid: valid });
+    updateMinimumKeyCountAndValidity() {
+        const minimumKeyCount = this.getMinimumKeyCount();
+        const maximumKeyCount = this.getMaximumKeyCount();
+
+        const valid =
+            this.state.keyCount >= minimumKeyCount &&
+            this.state.keyCount <= maximumKeyCount;
+
+        this.setState({
+            minimumKeyCount: minimumKeyCount,
+            maximumKeyCount: maximumKeyCount,
+            valid: valid
+        });
     }
 
     editState(newState = {}) {
@@ -67,7 +114,7 @@ class Index extends React.Component {
             );
         }
 
-        this.setState(newState, this.updateValidState);
+        this.setState(newState, this.updateMinimumKeyCountAndValidity);
     }
 
     resetState() {

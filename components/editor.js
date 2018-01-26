@@ -127,8 +127,8 @@ class Editor extends React.Component {
                     <Col xl={cols[1]}>
                         <Input
                             type="number"
-                            min="3"
-                            max="22"
+                            min={this.props.state.minimumKeyCount}
+                            max={this.props.state.maximumKeyCount}
                             name="keyCount"
                             id="keyCount"
                             bsize="sm"
