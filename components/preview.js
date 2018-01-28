@@ -1,5 +1,4 @@
-import { extend } from "lodash/fp";
-import { times, throttle } from "lodash";
+import { throttle } from "lodash";
 import { Stage, Layer, Rect, Circle, Text } from "react-konva";
 import { Alert } from "reactstrap";
 import {
@@ -11,9 +10,15 @@ import {
     LABEL,
     POSITION
 } from "../components/constants";
+import PropTypes from "prop-types";
 
 class PreviewRect extends React.Component {
-    render(props) {
+    static propTypes = {
+        stroke: PropTypes.string,
+        strokeWidth: PropTypes.number
+    };
+
+    render() {
         return (
             <Rect
                 {...this.props}
@@ -28,7 +33,12 @@ class PreviewRect extends React.Component {
 }
 
 class PreviewCircle extends React.Component {
-    render(props) {
+    static propTypes = {
+        stroke: PropTypes.string,
+        strokeWidth: PropTypes.number
+    };
+
+    render() {
         return (
             <Circle
                 {...this.props}
@@ -43,6 +53,17 @@ class PreviewCircle extends React.Component {
 }
 
 class PreviewText extends React.Component {
+    static propTypes = {
+        fillWidth: PropTypes.number,
+        fillHeight: PropTypes.number,
+        fontSize: PropTypes.number,
+        text: PropTypes.string,
+        stroke: PropTypes.string,
+        strokeWidth: PropTypes.number,
+        x: PropTypes.number,
+        y: PropTypes.number
+    };
+
     constructor(props) {
         super(props);
 
@@ -141,6 +162,10 @@ class Preview extends React.Component {
     knobDiameter = HARDWARE.KNOB_DIAMETER;
     labelHeight = LABEL.HEIGHT;
 
+    static propTypes = {
+        state: PropTypes.object
+    };
+
     constructor(props) {
         super(props);
 
@@ -231,7 +256,7 @@ class Preview extends React.Component {
     }
 
     updateStageDimensions() {
-        if (!!this.stageEl) {
+        if (this.stageEl) {
             this.setState({
                 stageWidth: this.stageEl.clientWidth,
                 stageHeight: this.stageEl.clientHeight
@@ -249,8 +274,6 @@ class Preview extends React.Component {
         state.speakerDiameter = parseFloat(state.speakerDiameter) || 0;
         state.startingNoteIndex = parseInt(state.startingNoteIndex);
         state.controlPosition = parseInt(state.controlPosition);
-
-        const hasVanityText = state.vanityText.length > 0;
 
         const naturalKeys = this.getKeys(
             state.keyCount,

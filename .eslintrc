@@ -1,0 +1,22 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
+  "globals": {
+    "document": true,
+    "window": true,
+    "process": true,
+    "React": false,
+    "localStorage": false
+  },
+  "rules": {
+    "import/extensions": 0,
+    "import/no-extraneous-dependencies": 0,
+    "import/no-unresolved": 0,
+    "react/jsx-filename-extension": 0,
+    "linebreak-style": 0,
+    "no-undef": "error"
+  }
+}

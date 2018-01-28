@@ -6,13 +6,23 @@
     "start": "next start"
   },
   "dependencies": {
+    "babel-eslint": "^8.2.1",
     "bootstrap": "^4.0.0-beta.3",
+    "eslint": "^4.16.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.6.0",
     "konva": "^1.7.6",
     "next": "4.2.3",
+    "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-color": "^2.13.8",
     "react-dom": "^16.2.0",
     "react-konva": "^1.6.5",
     "reactstrap": "^5.0.0-alpha.4"
+  },
+  "devDependencies": {
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "xo": "^0.18.2"
   }
 }

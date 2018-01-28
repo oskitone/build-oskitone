@@ -1,6 +1,5 @@
 import { extend } from "lodash/fp";
 import { Col, Container, Row } from "reactstrap";
-import Link from "next/link";
 import Editor from "../components/editor";
 import Head from "../components/head";
 import Header from "../components/header";
@@ -11,7 +10,6 @@ import {
     ENCLOSURE,
     HARDWARE,
     KEY,
-    LABEL,
     POSITION
 } from "../components/constants";
 

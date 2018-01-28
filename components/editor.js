@@ -1,16 +1,15 @@
-import {
-    Col,
-    Button,
-    Form,
-    FormGroup,
-    FormText,
-    Input,
-    Label
-} from "reactstrap";
+import { Col, Button, FormGroup, Input, Label } from "reactstrap";
 import { TwitterPicker } from "react-color";
 import { COLOR, POSITION } from "../components/constants";
+import PropTypes from "prop-types";
 
 class ColorPicker extends React.Component {
+    static propTypes = {
+        color: PropTypes.string,
+        onChange: PropTypes.func,
+        size: PropTypes.string
+    };
+
     constructor(props) {
         super(props);
 
@@ -30,7 +29,7 @@ class ColorPicker extends React.Component {
         this.setState({ displayColorPicker: false });
     };
 
-    handleColorChange = (color, event) => {
+    handleColorChange = color => {
         this.props.onChange(color.hex);
     };
 
@@ -76,6 +75,12 @@ class ColorPicker extends React.Component {
 }
 
 class Editor extends React.Component {
+    static propTypes = {
+        state: PropTypes.object,
+        onChange: PropTypes.func,
+        onReset: PropTypes.func
+    };
+
     constructor(props) {
         super(props);
         this.state = props.state;
@@ -95,8 +100,7 @@ class Editor extends React.Component {
         }
     }
 
-    handleColorChange(color, event) {
-        console.log(color);
+    handleColorChange(color) {
         this.props.onChange({ color: color });
     }
 
@@ -195,7 +199,7 @@ class Editor extends React.Component {
                             value={this.props.state.speakerDiameter}
                             onChange={this.handleChange}
                         >
-                            <option value="49.8">2" x 2"</option>
+                            <option value="49.8">2&quot; x 2&quot;</option>
                             <option value="0">None</option>
                         </Input>
                     </Col>
