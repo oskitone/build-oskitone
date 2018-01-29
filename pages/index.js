@@ -1,6 +1,7 @@
 import { extend } from "lodash/fp";
 import { Col, Container, Row } from "reactstrap";
 import Editor from "../components/editor";
+import ExportModal from "../components/export-modal";
 import Head from "../components/head";
 import Header from "../components/header";
 import Preview from "../components/preview";
@@ -47,6 +48,10 @@ class Index extends React.Component {
         this.state = this.getLocalState();
         this.editState = this.editState.bind(this);
         this.resetState = this.resetState.bind(this);
+
+        this.state.exportModalIsOpen = false;
+        this.onExportModalOpen = this.onExportModalOpen.bind(this);
+        this.onExportModalClosed = this.onExportModalClosed.bind(this);
     }
 
     getMinimumKeyCount() {
@@ -197,6 +202,19 @@ class Index extends React.Component {
         }
     }
 
+    getExportData() {
+        return {
+            vanityText: this.state.vanityText,
+            keyCount: this.state.keyCount,
+            startingNoteIndex: this.state.startingNoteIndex,
+            color: this.state.color,
+            speakerDiameter: this.state.speakerDiameter,
+            controlPosition: this.getControlPosition(),
+            enclosureDimensions: this.state.enclosureDimensions,
+            vanityTextDimensions: this.state.vanityTextDimensions
+        };
+    }
+
     editState(newState = {}) {
         if (hasLocalStorage) {
             localStorage.setItem(
@@ -212,6 +230,17 @@ class Index extends React.Component {
         this.editState(this.defaultState);
     }
 
+    onExportModalOpen() {
+        this.setState({
+            exportData: this.getExportData(),
+            exportModalIsOpen: true
+        });
+    }
+
+    onExportModalClosed() {
+        this.setState({ exportModalIsOpen: false });
+    }
+
     render() {
         return (
             <Container>
@@ -224,6 +253,7 @@ class Index extends React.Component {
                             state={this.state}
                             onChange={this.editState}
                             onReset={this.resetState}
+                            onExport={this.onExportModalOpen}
                         />
                     </Col>
 
@@ -231,6 +261,12 @@ class Index extends React.Component {
                         <Preview state={this.state} />
                     </Col>
                 </Row>
+
+                <ExportModal
+                    isOpen={this.state.exportModalIsOpen}
+                    onClosed={this.onExportModalClosed}
+                    data={this.state.exportData}
+                />
 
                 <style jsx>{`
                     :global(body) {

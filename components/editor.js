@@ -78,7 +78,8 @@ class Editor extends React.Component {
     static propTypes = {
         state: PropTypes.object,
         onChange: PropTypes.func,
-        onReset: PropTypes.func
+        onReset: PropTypes.func,
+        onExport: PropTypes.func
     };
 
     constructor(props) {
@@ -232,8 +233,20 @@ class Editor extends React.Component {
                 </FormGroup>
 
                 <FormGroup>
-                    <Button color="secondary" onClick={this.props.onReset}>
+                    <Button
+                        size="sm"
+                        color="secondary"
+                        onClick={this.props.onReset}
+                    >
                         Reset
+                    </Button>{" "}
+                    <Button
+                        size="sm"
+                        color="secondary"
+                        disabled={!this.props.state.valid}
+                        onClick={this.props.onExport}
+                    >
+                        Export
                     </Button>
                 </FormGroup>
             </div>
