@@ -177,12 +177,15 @@ class Index extends React.Component {
             valid = valid && inputValidities[key];
         }
 
-        this.setState({
-            minimumKeyCount: minimumKeyCount,
-            maximumKeyCount: maximumKeyCount,
-            inputValidities: inputValidities,
-            valid: valid
-        });
+        this.setState(
+            {
+                minimumKeyCount: minimumKeyCount,
+                maximumKeyCount: maximumKeyCount,
+                inputValidities: inputValidities,
+                valid: valid
+            },
+            this.updateEnclosureDimensions
+        );
     }
 
     updateEnclosureDimensions() {
@@ -202,10 +205,7 @@ class Index extends React.Component {
             );
         }
 
-        this.setState(newState, () => {
-            this.updateMinimumKeyCountAndValidity();
-            this.updateEnclosureDimensions();
-        });
+        this.setState(newState, this.updateMinimumKeyCountAndValidity);
     }
 
     resetState() {
