@@ -33,7 +33,8 @@ class Index extends React.Component {
         minimumKeyCount: 3,
         maximumKeyCount: 88,
         enclosureDimensions: { width: undefined, height: undefined },
-        vanityTextDimensions: { width: undefined, height: undefined }
+        vanityTextDimensions: { width: undefined, height: undefined },
+        inputValidities: {}
     };
 
     constructor(props) {
@@ -165,13 +166,21 @@ class Index extends React.Component {
         const minimumKeyCount = this.getMinimumKeyCount();
         const maximumKeyCount = this.getMaximumKeyCount();
 
-        const valid =
-            this.state.keyCount >= minimumKeyCount &&
-            this.state.keyCount <= maximumKeyCount;
+        const inputValidities = {
+            keyCount:
+                this.state.keyCount >= minimumKeyCount &&
+                this.state.keyCount <= maximumKeyCount
+        };
+
+        let valid = true;
+        for (var key in inputValidities) {
+            valid = valid && inputValidities[key];
+        }
 
         this.setState({
             minimumKeyCount: minimumKeyCount,
             maximumKeyCount: maximumKeyCount,
+            inputValidities: inputValidities,
             valid: valid
         });
     }

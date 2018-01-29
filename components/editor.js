@@ -1,4 +1,4 @@
-import { Col, Button, FormGroup, Input, Label } from "reactstrap";
+import { Col, Button, FormFeedback, FormGroup, Input, Label } from "reactstrap";
 import { TwitterPicker } from "react-color";
 import { COLOR, POSITION } from "../components/constants";
 import PropTypes from "prop-types";
@@ -106,6 +106,14 @@ class Editor extends React.Component {
 
     render() {
         const cols = [5, 7];
+
+        const isValid = key => {
+            const valid = this.props.state.inputValidities[key];
+
+            // Intentionally avoiding "true" valid state styling
+            return valid === true || valid === undefined ? null : false;
+        };
+
         return (
             <div>
                 <FormGroup row>
@@ -130,6 +138,7 @@ class Editor extends React.Component {
                     </Label>
                     <Col xl={cols[1]}>
                         <Input
+                            valid={isValid("keyCount")}
                             type="number"
                             min={this.props.state.minimumKeyCount}
                             max={this.props.state.maximumKeyCount}
@@ -139,6 +148,10 @@ class Editor extends React.Component {
                             value={this.props.state.keyCount}
                             onChange={this.handleChange}
                         />
+                        <FormFeedback>
+                            Must be between {this.props.state.minimumKeyCount}{" "}
+                            and {this.props.state.maximumKeyCount}
+                        </FormFeedback>
                     </Col>
                 </FormGroup>
 
