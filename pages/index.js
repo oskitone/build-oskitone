@@ -262,7 +262,7 @@ class Index extends React.Component {
         return (
             <Container className="container">
                 <Head title="build.oskitone" />
-                <Header title="build.oskitone" />
+                <Header />
 
                 <Row className="editorAndPreview">
                     <Col xs="12" md="4">
