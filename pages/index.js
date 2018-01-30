@@ -257,12 +257,14 @@ class Index extends React.Component {
     }
 
     render() {
+        const verticalGutterRem = 1;
+
         return (
-            <Container>
+            <Container className="container">
                 <Head title="build.oskitone" />
                 <Header title="build.oskitone" />
 
-                <Row>
+                <Row className="editorAndPreview">
                     <Col xs="12" md="4">
                         <Editor
                             state={this.state}
@@ -287,7 +289,27 @@ class Index extends React.Component {
 
                 <style jsx>{`
                     :global(body) {
-                        margin: 1rem 0;
+                        margin: ${verticalGutterRem}rem 0;
+                    }
+
+                    // TODO: make kosher, w/o global hacks
+                    @media (min-width: 768px) {
+                        :global(.container) {
+                            display: flex;
+                            flex-direction: column;
+                            height: calc(100vh - ${verticalGutterRem * 2}rem);
+                        }
+
+                        :global(.editorAndPreview) {
+                            flex: 1;
+                        }
+
+                        :global(.previewContainer) {
+                            position: absolute;
+                            height: 100%;
+                            left: 0;
+                            right: 0;
+                        }
                     }
                 `}</style>
             </Container>

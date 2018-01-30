@@ -330,7 +330,7 @@ class Preview extends React.Component {
         }
 
         return (
-            <div ref={el => (this.stageEl = el)}>
+            <div className="previewContainer" ref={el => (this.stageEl = el)}>
                 <Stage
                     width={this.state.stageWidth}
                     height={this.state.stageHeight}
