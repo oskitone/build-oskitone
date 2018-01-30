@@ -169,16 +169,42 @@ class Index extends React.Component {
         this.updateEnclosureDimensions();
     }
 
+    getMaximumVanityTextLength() {
+        function possibleGutter(width) {
+            return width > 0 ? ENCLOSURE.GUTTER : 0;
+        }
+
+        let availableWidh = this.state.keyCount * KEY.WIDTH;
+
+        if (this.state.controlPosition === POSITION.BACK) {
+            availableWidh -=
+                possibleGutter(availableWidh) + this.state.speakerDiameter;
+
+            if (this.state.knobsCount >= 0) {
+                availableWidh -=
+                    possibleGutter(availableWidh) +
+                    HARDWARE.KNOB_DIAMETER * this.state.knobsCount +
+                    ENCLOSURE.GUTTER * (this.state.knobsCount - 1);
+            }
+        }
+
+        return Math.ceil(availableWidh / KEY.WIDTH);
+    }
+
     updateMinimumKeyCountAndValidity() {
+        let inputValidities = {};
+
         const minimumKeyCount = this.getMinimumKeyCount();
         const maximumKeyCount = this.getMaximumKeyCount();
+        inputValidities.keyCount =
+            this.state.keyCount >= minimumKeyCount &&
+            this.state.keyCount <= maximumKeyCount &&
+            this.state.keyCount % 1 === 0;
 
-        const inputValidities = {
-            keyCount:
-                this.state.keyCount >= minimumKeyCount &&
-                this.state.keyCount <= maximumKeyCount &&
-                this.state.keyCount % 1 === 0
-        };
+        const maximumVanityTextLength = this.getMaximumVanityTextLength();
+        inputValidities.vanityText =
+            !inputValidities.keyCount || // Assume valid until keyCount fixed
+            this.state.vanityText.length <= maximumVanityTextLength;
 
         let valid = true;
         for (var key in inputValidities) {
@@ -189,6 +215,7 @@ class Index extends React.Component {
             {
                 minimumKeyCount: minimumKeyCount,
                 maximumKeyCount: maximumKeyCount,
+                maximumVanityTextLength: maximumVanityTextLength,
                 inputValidities: inputValidities,
                 valid: valid
             },

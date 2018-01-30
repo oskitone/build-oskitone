@@ -145,6 +145,7 @@ class Editor extends React.Component {
                     </Label>
                     <Col xl={cols[1]}>
                         <Input
+                            valid={isValid("vanityText")}
                             type="text"
                             name="vanityText"
                             id="vanityText"
@@ -152,6 +153,11 @@ class Editor extends React.Component {
                             value={this.props.state.vanityText}
                             onChange={this.handleChange}
                         />
+                        <FormFeedback>
+                            No more than{" "}
+                            {this.props.state.maximumVanityTextLength}{" "}
+                            characters
+                        </FormFeedback>
                     </Col>
                 </FormGroup>
 
