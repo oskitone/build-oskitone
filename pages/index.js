@@ -52,6 +52,8 @@ class Index extends React.Component {
         this.state.exportModalIsOpen = false;
         this.onExportModalOpen = this.onExportModalOpen.bind(this);
         this.onExportModalClosed = this.onExportModalClosed.bind(this);
+
+        this.onInquire = this.onInquire.bind(this);
     }
 
     getMinimumKeyCount() {
@@ -241,6 +243,19 @@ class Index extends React.Component {
         this.setState({ exportModalIsOpen: false });
     }
 
+    onInquire() {
+        const url =
+            "mailto:orders@oskitone.com?subject=" +
+            encodeURIComponent("Purchase Inquiry [build.oskitone]") +
+            "&body=" +
+            encodeURIComponent(
+                "Hello, I would like to inquire about purchasing a synth of the following design:\n\n" +
+                    JSON.stringify(this.getExportData(), null, 4)
+            );
+
+        window.open(url);
+    }
+
     render() {
         return (
             <Container>
@@ -254,6 +269,7 @@ class Index extends React.Component {
                             onChange={this.editState}
                             onReset={this.resetState}
                             onExport={this.onExportModalOpen}
+                            onInquire={this.onInquire}
                         />
                     </Col>
 
@@ -265,6 +281,7 @@ class Index extends React.Component {
                 <ExportModal
                     isOpen={this.state.exportModalIsOpen}
                     onClosed={this.onExportModalClosed}
+                    onInquire={this.onInquire}
                     data={this.state.exportData}
                 />
 

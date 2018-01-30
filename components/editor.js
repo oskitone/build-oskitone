@@ -1,4 +1,15 @@
-import { Col, Button, FormFeedback, FormGroup, Input, Label } from "reactstrap";
+import {
+    Col,
+    Button,
+    ButtonDropdown,
+    DropdownItem,
+    DropdownToggle,
+    DropdownMenu,
+    FormFeedback,
+    FormGroup,
+    Input,
+    Label
+} from "reactstrap";
 import { TwitterPicker } from "react-color";
 import { COLOR, POSITION } from "../components/constants";
 import PropTypes from "prop-types";
@@ -79,12 +90,19 @@ class Editor extends React.Component {
         state: PropTypes.object,
         onChange: PropTypes.func,
         onReset: PropTypes.func,
-        onExport: PropTypes.func
+        onExport: PropTypes.func,
+        onInquire: PropTypes.func,
+        inquireUrl: PropTypes.string
     };
 
     constructor(props) {
         super(props);
+
         this.state = props.state;
+
+        this.state.moreButtonIsOpen = false;
+        this.toggleMoreButton = this.toggleMoreButton.bind(this);
+
         this.handleChange = this.handleChange.bind(this);
         this.handleColorChange = this.handleColorChange.bind(this);
     }
@@ -103,6 +121,10 @@ class Editor extends React.Component {
 
     handleColorChange(color) {
         this.props.onChange({ color: color });
+    }
+
+    toggleMoreButton() {
+        this.setState({ moreButtonIsOpen: !this.state.moreButtonIsOpen });
     }
 
     render() {
@@ -240,14 +262,29 @@ class Editor extends React.Component {
                     >
                         Reset
                     </Button>{" "}
-                    <Button
+                    <ButtonDropdown
                         size="sm"
-                        color="secondary"
-                        disabled={!this.props.state.valid}
-                        onClick={this.props.onExport}
+                        isOpen={this.state.moreButtonIsOpen}
+                        toggle={this.toggleMoreButton}
                     >
-                        Export
-                    </Button>
+                        <DropdownToggle caret color="secondary">
+                            More
+                        </DropdownToggle>
+                        <DropdownMenu>
+                            <DropdownItem
+                                disabled={!this.props.state.valid}
+                                onClick={this.props.onExport}
+                            >
+                                Export
+                            </DropdownItem>
+                            <DropdownItem
+                                disabled={!this.props.state.valid}
+                                onClick={this.props.onInquire}
+                            >
+                                Inquire for purchase
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </ButtonDropdown>
                 </FormGroup>
             </div>
         );

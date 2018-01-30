@@ -5,7 +5,8 @@ class ExportModal extends React.Component {
     static propTypes = {
         isOpen: PropTypes.bool,
         data: PropTypes.object,
-        onClosed: PropTypes.func
+        onClosed: PropTypes.func,
+        onInquire: PropTypes.func
     };
 
     constructor(props) {
@@ -30,7 +31,10 @@ class ExportModal extends React.Component {
                     <pre>{JSON.stringify(this.props.data, null, 4)}</pre>
                 </ModalBody>
                 <ModalFooter>
-                    <Button onClick={this.props.onClosed}>Okay</Button>
+                    <Button color="primary" onClick={this.props.onInquire}>
+                        Inquire for purchase
+                    </Button>
+                    <Button onClick={this.props.onClosed}>Cancel</Button>
                 </ModalFooter>
             </Modal>
         );
