@@ -172,8 +172,9 @@ class Editor extends React.Component {
                             onChange={this.handleChange}
                         />
                         <FormFeedback>
-                            Must be between {this.props.state.minimumKeyCount}{" "}
-                            and {this.props.state.maximumKeyCount}
+                            Round numbers from{" "}
+                            {this.props.state.minimumKeyCount} to{" "}
+                            {this.props.state.maximumKeyCount} only
                         </FormFeedback>
                     </Col>
                 </FormGroup>

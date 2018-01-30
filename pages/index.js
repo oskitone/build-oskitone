@@ -176,7 +176,8 @@ class Index extends React.Component {
         const inputValidities = {
             keyCount:
                 this.state.keyCount >= minimumKeyCount &&
-                this.state.keyCount <= maximumKeyCount
+                this.state.keyCount <= maximumKeyCount &&
+                this.state.keyCount % 1 === 0
         };
 
         let valid = true;
