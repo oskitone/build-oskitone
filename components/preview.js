@@ -312,7 +312,7 @@ class Preview extends React.Component {
         const keyY =
             state.enclosureDimensions.height - this.keyHeight - this.gutter;
 
-        const offset = 5;
+        const offset = 1;
         const scale = Math.min(
             (this.state.stageWidth - offset * 5) /
                 state.enclosureDimensions.width,
