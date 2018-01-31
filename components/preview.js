@@ -75,17 +75,10 @@ class PreviewText extends React.Component {
         };
     }
 
-    hasRoom() {
-        return this.props.fillWidth > 0 && this.props.fillHeight > 0;
-    }
+    hasRoom = () => this.props.fillWidth > 0 && this.props.fillHeight > 0;
 
-    isDynamic() {
-        return (
-            this.instance &&
-            this.props.fillWidth > 0 &&
-            this.props.fillHeight > 0
-        );
-    }
+    isDynamic = () =>
+        this.instance && this.props.fillWidth > 0 && this.props.fillHeight > 0;
 
     componentDidMount() {
         this.updateSizeAndPlacement(true);
@@ -95,7 +88,7 @@ class PreviewText extends React.Component {
         this.updateSizeAndPlacement();
     }
 
-    updateSizeAndPlacement(forceUpdate = false) {
+    updateSizeAndPlacement = (forceUpdate = false) => {
         if (this.hasRoom() && this.isDynamic()) {
             const fontSize =
                 Math.floor(
@@ -130,7 +123,7 @@ class PreviewText extends React.Component {
                 });
             }
         }
-    }
+    };
 
     render() {
         return (
@@ -177,19 +170,14 @@ class Preview extends React.Component {
         };
 
         this.stageEl = null;
-
-        this.updateStageDimensions = throttle(
-            this.updateStageDimensions.bind(this),
-            200
-        );
     }
 
-    getKeys(
+    getKeys = (
         keyCount = 0,
         startingNoteIndex = 0,
         includeNaturals = false,
         includeAccidentals = false
-    ) {
+    ) => {
         let keys = [];
 
         for (var i = 0; i < keyCount; i++) {
@@ -218,9 +206,9 @@ class Preview extends React.Component {
         }
 
         return keys;
-    }
+    };
 
-    getControls(knobsCount, startingX, startingY, availableHeight) {
+    getControls = (knobsCount, startingX, startingY, availableHeight) => {
         const markerWidth = 2;
         const radius = this.knobDiameter / 2;
 
@@ -253,16 +241,16 @@ class Preview extends React.Component {
         }
 
         return knobs;
-    }
+    };
 
-    updateStageDimensions() {
+    updateStageDimensions = throttle(() => {
         if (this.stageEl) {
             this.setState({
                 stageWidth: this.stageEl.clientWidth,
                 stageHeight: this.stageEl.clientHeight
             });
         }
-    }
+    }, 200);
 
     componentDidMount() {
         this.updateStageDimensions();

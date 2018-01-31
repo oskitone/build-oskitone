@@ -133,16 +133,13 @@ class InquireModal extends React.Component {
             redirectAttempted: false,
             missingOptionSelection: false
         };
-
-        this.onInquire = this.onInquire.bind(this);
-        this.handleOptionSelection = this.handleOptionSelection.bind(this);
     }
 
     componentWillReceiveProps(props) {
         this.setState({ isOpen: props.isOpen });
     }
 
-    onInquire() {
+    onInquire = () => {
         if (!this.state.option) {
             this.setState({ missingOptionSelection: true });
             return;
@@ -169,9 +166,9 @@ class InquireModal extends React.Component {
         window.setTimeout(() => {
             window.location = url;
         }, 2000);
-    }
+    };
 
-    getControlPositionText(controlPosition) {
+    getControlPositionText = controlPosition => {
         if (controlPosition === POSITION.AUTO) {
             return "Auto";
         }
@@ -184,20 +181,14 @@ class InquireModal extends React.Component {
         if (controlPosition === POSITION.RIGHT) {
             return "Right";
         }
-    }
+    };
 
-    getStartingNoteIndexText() {
-        return ["C", "D", "E", "F", "G", "A", "B"][
-            this.props.data.startingNoteIndex
-        ];
-    }
+    getStartingNoteIndexText = () =>
+        ["C", "D", "E", "F", "G", "A", "B"][this.props.data.startingNoteIndex];
 
-    getDimensionsText() {
+    getDimensionsText = () => {
         const dimensions = this.props.data.enclosureDimensions;
-
-        const toEnglish = value => {
-            return round(value / 25.4, 2);
-        };
+        const toEnglish = value => round(value / 25.4, 2);
 
         return (
             toEnglish(dimensions.width) +
@@ -205,35 +196,28 @@ class InquireModal extends React.Component {
             toEnglish(dimensions.height) +
             '" x 2.2"'
         );
-    }
+    };
 
-    getSpeakerSizeText() {
-        return this.props.data.speakerDiameter > 0
+    getSpeakerSizeText = () =>
+        this.props.data.speakerDiameter > 0
             ? '2" x 2"' // TODO: extract
             : "None";
-    }
 
-    getCanBeMadeByOskitone(
+    getCanBeMadeByOskitone = (
         maxWidth = OSKITONE.PRINTER.BED_WIDTH,
         maxLength = OSKITONE.PRINTER.BED_LENGTH,
         availableColors = OSKITONE.AVAILABLE_COLORS
-    ) {
-        const colorIsAvailable =
-            availableColors.indexOf(this.props.data.color.toUpperCase()) !== -1;
+    ) =>
+        availableColors.indexOf(this.props.data.color.toUpperCase()) !== -1 &&
+        (this.props.data.enclosureDimensions.width <= maxWidth &&
+            this.props.data.enclosureDimensions.height <= maxLength);
 
-        const willFitOnPrinter =
-            this.props.data.enclosureDimensions.width <= maxWidth &&
-            this.props.data.enclosureDimensions.height <= maxLength;
-
-        return colorIsAvailable && willFitOnPrinter;
-    }
-
-    handleOptionSelection(event) {
+    handleOptionSelection = event => {
         this.setState({
             option: event.target.value,
             missingOptionSelection: false
         });
-    }
+    };
 
     render() {
         const props = this.props;

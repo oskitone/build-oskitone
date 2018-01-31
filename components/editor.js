@@ -17,8 +17,6 @@ class ColorPicker extends React.Component {
             displayColorPicker: false,
             color: props.color
         };
-
-        this.handleColorChange = this.handleColorChange.bind(this);
     }
 
     handleClick = () => {
@@ -89,13 +87,9 @@ class Editor extends React.Component {
         this.state = props.state;
 
         this.state.moreButtonIsOpen = false;
-        this.toggleMoreButton = this.toggleMoreButton.bind(this);
-
-        this.handleChange = this.handleChange.bind(this);
-        this.handleColorChange = this.handleColorChange.bind(this);
     }
 
-    handleChange(event) {
+    handleChange = event => {
         const name = event.target.name;
         const value = event.target.value;
 
@@ -105,15 +99,15 @@ class Editor extends React.Component {
             newState[name] = value;
             this.props.onChange(newState);
         }
-    }
+    };
 
-    handleColorChange(color) {
+    handleColorChange = color => {
         this.props.onChange({ color: color });
-    }
+    };
 
-    toggleMoreButton() {
+    toggleMoreButton = () => {
         this.setState({ moreButtonIsOpen: !this.state.moreButtonIsOpen });
-    }
+    };
 
     render() {
         const cols = [5, 7];

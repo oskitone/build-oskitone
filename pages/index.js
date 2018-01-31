@@ -54,25 +54,18 @@ class Index extends React.Component {
         this.minimumVanityTextHeight = 10;
 
         this.state = this.getLocalState();
-        this.editState = this.editState.bind(this);
-        this.resetState = this.resetState.bind(this);
-
-        this.onModalOpen = this.onModalOpen.bind(this);
-        this.onModalClosed = this.onModalClosed.bind(this);
 
         if (hasWindow) {
-            window.randomize = this.randomize.bind(this); // Easter egg!
+            window.randomize = this.randomize; // Easter egg!
         }
     }
 
-    getMinimumKeyCount(
+    getMinimumKeyCount = (
         vanityText = this.state.vanityText,
         speakerDiameter = this.state.speakerDiameter,
         controlPosition = this.getControlPosition()
-    ) {
-        function possibleGutter(width) {
-            return width > 0 ? ENCLOSURE.GUTTER : 0;
-        }
+    ) => {
+        const possibleGutter = width => (width > 0 ? ENCLOSURE.GUTTER : 0);
 
         let width = 0;
 
@@ -95,89 +88,77 @@ class Index extends React.Component {
             Math.ceil(width / KEY.WIDTH),
             this.defaultState.minimumKeyCount
         );
-    }
+    };
 
-    getMaximumKeyCount() {
-        return this.defaultState.maximumKeyCount;
-    }
+    getMaximumKeyCount = () => this.defaultState.maximumKeyCount;
 
-    getControlPosition(
+    getControlPosition = (
         controlPosition = this.state.controlPosition,
         keyCount = this.state.keyCount
-    ) {
-        return controlPosition === POSITION.AUTO
-            ? keyCount > 8 ? POSITION.BACK : POSITION.RIGHT
+    ) =>
+        controlPosition === POSITION.AUTO
+            ? this.state.keyCount > 8 ? POSITION.BACK : POSITION.RIGHT
             : controlPosition;
-    }
 
-    getVanityTextDimensions() {
-        const state = this.state;
+    getVanityTextDimensions = () => ({
+        width:
+            KEY.WIDTH * this.state.keyCount -
+            (this.getControlPosition() === POSITION.BACK
+                ? (this.state.speakerDiameter > 0
+                      ? ENCLOSURE.GUTTER + this.state.speakerDiameter
+                      : 0) +
+                  this.state.knobsCount *
+                      (HARDWARE.KNOB_DIAMETER + ENCLOSURE.GUTTER)
+                : 0),
+        height: Math.max(
+            this.getControlPosition() === POSITION.BACK
+                ? Math.max(this.state.speakerDiameter, CONTROL.MINIMUM_HEIGHT)
+                : this.state.speakerDiameter +
+                  CONTROL.MINIMUM_HEIGHT -
+                  KEY.HEIGHT,
+            this.minimumVanityTextHeight
+        )
+    });
 
-        return {
-            width:
-                KEY.WIDTH * state.keyCount -
-                (this.getControlPosition() === POSITION.BACK
-                    ? (state.speakerDiameter > 0
-                          ? ENCLOSURE.GUTTER + state.speakerDiameter
-                          : 0) +
-                      state.knobsCount *
-                          (HARDWARE.KNOB_DIAMETER + ENCLOSURE.GUTTER)
-                    : 0),
-            height: Math.max(
-                this.getControlPosition() === POSITION.BACK
-                    ? Math.max(state.speakerDiameter, CONTROL.MINIMUM_HEIGHT)
-                    : state.speakerDiameter +
-                      CONTROL.MINIMUM_HEIGHT -
-                      KEY.HEIGHT,
-                this.minimumVanityTextHeight
-            )
-        };
-    }
+    getEnclosureDimensions = () => ({
+        width:
+            this.state.keyCount * KEY.WIDTH +
+            ENCLOSURE.GUTTER * 2 +
+            (this.getControlPosition() === POSITION.BACK
+                ? 0
+                : this.state.speakerDiameter > 0
+                  ? this.state.speakerDiameter + ENCLOSURE.GUTTER
+                  : HARDWARE.KNOB_DIAMETER * 2 + ENCLOSURE.GUTTER * 2),
+        height:
+            this.getControlPosition() === POSITION.BACK
+                ? KEY.HEIGHT +
+                  ENCLOSURE.GUTTER * 2 +
+                  Math.max(this.state.speakerDiameter, CONTROL.MINIMUM_HEIGHT) +
+                  ENCLOSURE.GUTTER
+                : this.state.vanityText.length > 0
+                  ? this.getVanityTextDimensions().height +
+                    KEY.HEIGHT +
+                    ENCLOSURE.GUTTER * 3
+                  : this.state.speakerDiameter > 0
+                    ? this.state.speakerDiameter +
+                      CONTROL.MINIMUM_HEIGHT +
+                      ENCLOSURE.GUTTER * 3
+                    : Math.max(
+                          KEY.HEIGHT,
+                          this.state.speakerDiameter +
+                              ENCLOSURE.GUTTER +
+                              CONTROL.MINIMUM_HEIGHT
+                      ) +
+                      ENCLOSURE.GUTTER * 2
+    });
 
-    getEnclosureDimensions() {
-        const state = this.state;
-
-        return {
-            width:
-                state.keyCount * KEY.WIDTH +
-                ENCLOSURE.GUTTER * 2 +
-                (this.getControlPosition() === POSITION.BACK
-                    ? 0
-                    : state.speakerDiameter > 0
-                      ? state.speakerDiameter + ENCLOSURE.GUTTER
-                      : HARDWARE.KNOB_DIAMETER * 2 + ENCLOSURE.GUTTER * 2),
-            height:
-                this.getControlPosition() === POSITION.BACK
-                    ? KEY.HEIGHT +
-                      ENCLOSURE.GUTTER * 2 +
-                      Math.max(state.speakerDiameter, CONTROL.MINIMUM_HEIGHT) +
-                      ENCLOSURE.GUTTER
-                    : state.vanityText.length > 0
-                      ? this.getVanityTextDimensions().height +
-                        KEY.HEIGHT +
-                        ENCLOSURE.GUTTER * 3
-                      : state.speakerDiameter > 0
-                        ? state.speakerDiameter +
-                          CONTROL.MINIMUM_HEIGHT +
-                          ENCLOSURE.GUTTER * 3
-                        : Math.max(
-                              KEY.HEIGHT,
-                              state.speakerDiameter +
-                                  ENCLOSURE.GUTTER +
-                                  CONTROL.MINIMUM_HEIGHT
-                          ) +
-                          ENCLOSURE.GUTTER * 2
-        };
-    }
-
-    getLocalState = () => {
-        return extend(
+    getLocalState = () =>
+        extend(
             this.defaultState,
             hasLocalStorage
                 ? JSON.parse(localStorage.getItem(this.stateStorageKey))
                 : {}
         );
-    };
 
     componentDidMount() {
         this.setState(this.getLocalState());
@@ -185,14 +166,12 @@ class Index extends React.Component {
         this.updateEnclosureDimensions();
     }
 
-    getMaximumVanityTextLength(
+    getMaximumVanityTextLength = (
         keyCount = this.state.keyCount,
         speakerDiameter = this.state.speakerDiameter,
         controlPosition = this.getControlPosition()
-    ) {
-        function possibleGutter(width) {
-            return width > 0 ? ENCLOSURE.GUTTER : 0;
-        }
+    ) => {
+        const possibleGutter = width => (width > 0 ? ENCLOSURE.GUTTER : 0);
 
         let availableWidh = keyCount * KEY.WIDTH;
 
@@ -208,9 +187,9 @@ class Index extends React.Component {
         }
 
         return Math.ceil(availableWidh / KEY.WIDTH);
-    }
+    };
 
-    updateMinimumKeyCountAndValidity() {
+    updateMinimumKeyCountAndValidity = () => {
         let inputValidities = {};
 
         const minimumKeyCount = this.getMinimumKeyCount();
@@ -240,31 +219,29 @@ class Index extends React.Component {
             },
             this.updateEnclosureDimensions
         );
-    }
+    };
 
-    updateEnclosureDimensions() {
+    updateEnclosureDimensions = () => {
         if (this.state.valid) {
             this.setState({
                 enclosureDimensions: this.getEnclosureDimensions(),
                 vanityTextDimensions: this.getVanityTextDimensions()
             });
         }
-    }
+    };
 
-    getExportData() {
-        return {
-            vanityText: this.state.vanityText,
-            keyCount: this.state.keyCount,
-            startingNoteIndex: this.state.startingNoteIndex,
-            color: this.state.color,
-            speakerDiameter: this.state.speakerDiameter,
-            controlPosition: this.getControlPosition(),
-            enclosureDimensions: this.state.enclosureDimensions,
-            vanityTextDimensions: this.state.vanityTextDimensions
-        };
-    }
+    getExportData = () => ({
+        vanityText: this.state.vanityText,
+        keyCount: this.state.keyCount,
+        startingNoteIndex: this.state.startingNoteIndex,
+        color: this.state.color,
+        speakerDiameter: this.state.speakerDiameter,
+        controlPosition: this.getControlPosition(),
+        enclosureDimensions: this.state.enclosureDimensions,
+        vanityTextDimensions: this.state.vanityTextDimensions
+    });
 
-    editState(newState = {}) {
+    editState = (newState = {}) => {
         if (hasLocalStorage) {
             localStorage.setItem(
                 this.stateStorageKey,
@@ -273,58 +250,48 @@ class Index extends React.Component {
         }
 
         this.setState(newState, this.updateMinimumKeyCountAndValidity);
-    }
+    };
 
-    resetState() {
+    resetState = () => {
         const message =
             "Are yous sure? You will lose any changes you have made.";
 
         if (window.confirm(message)) {
             this.editState(this.defaultState);
         }
-    }
+    };
 
-    onModalOpen(modalKey) {
-        return () => {
-            this.setState({
-                exportData: this.getExportData(), // todo conditionalize
-                openModalKey: modalKey
-            });
-        };
-    }
+    onModalOpen = modalKey => () => {
+        this.setState({
+            exportData: this.getExportData(), // todo conditionalize
+            openModalKey: modalKey
+        });
+    };
 
-    onModalClosed(modalKey) {
-        return () => {
-            if (this.state.openModalKey === modalKey) {
-                this.setState({ openModalKey: undefined });
+    onModalClosed = modalKey => () => {
+        if (this.state.openModalKey === modalKey) {
+            this.setState({ openModalKey: undefined });
 
-                if (hasLocalStorage && modalKey === "about") {
-                    localStorage.dismissedAboutModal = 1;
-                }
+            if (hasLocalStorage && modalKey === "about") {
+                localStorage.dismissedAboutModal = 1;
             }
-        };
-    }
+        }
+    };
 
-    randomize() {
-        const getRandomArrayValue = function(values = []) {
-            return values[Math.floor(values.length * Math.random())];
-        };
-
-        const getRandom = function(min = 0, max = 0) {
-            const result = min + Math.round(Math.random() * (max - min));
-            return result;
-        };
-
+    randomize = () => {
+        const getRandomArrayValue = (values = []) =>
+            values[Math.floor(values.length * Math.random())];
+        const getRandom = (min = 0, max = 0) =>
+            min + Math.round(Math.random() * (max - min));
         const controlPosition = getRandomArrayValue([
             POSITION.BACK,
             POSITION.RIGHT
         ]);
 
-        const speakerDiameter = function(likelihood = 3 / 4) {
-            return Math.random() <= likelihood
+        const speakerDiameter = ((likelihood = 3 / 4) =>
+            Math.random() <= likelihood
                 ? this.defaultState.speakerDiameter
-                : 0;
-        }.bind(this)();
+                : 0)();
 
         const keyCount = getRandom(
             this.getMinimumKeyCount(
@@ -355,7 +322,7 @@ class Index extends React.Component {
                 this.randomize();
             }
         }, 250);
-    }
+    };
 
     render() {
         const verticalGutterRem = 1;
