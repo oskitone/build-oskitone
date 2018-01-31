@@ -58,19 +58,23 @@ class Index extends React.Component {
         this.onModalClosed = this.onModalClosed.bind(this);
     }
 
-    getMinimumKeyCount() {
+    getMinimumKeyCount(
+        vanityText = this.state.vanityText,
+        speakerDiameter = this.state.speakerDiameter,
+        controlPosition = this.getControlPosition()
+    ) {
         function possibleGutter(width) {
             return width > 0 ? ENCLOSURE.GUTTER : 0;
         }
 
         let width = 0;
 
-        if (this.state.vanityText.length > 0) {
+        if (vanityText.length > 0) {
             width += this.vanityTextMinimumWidth;
         }
 
-        if (this.state.controlPosition === POSITION.BACK) {
-            width += possibleGutter(width) + this.state.speakerDiameter;
+        if (controlPosition === POSITION.BACK) {
+            width += possibleGutter(width) + speakerDiameter;
 
             if (this.state.knobsCount >= 0) {
                 width +=
@@ -90,10 +94,13 @@ class Index extends React.Component {
         return this.defaultState.maximumKeyCount;
     }
 
-    getControlPosition() {
-        return this.state.controlPosition === POSITION.AUTO
-            ? this.state.keyCount > 8 ? POSITION.BACK : POSITION.RIGHT
-            : this.state.controlPosition;
+    getControlPosition(
+        controlPosition = this.state.controlPosition,
+        keyCount = this.state.keyCount
+    ) {
+        return controlPosition === POSITION.AUTO
+            ? keyCount > 8 ? POSITION.BACK : POSITION.RIGHT
+            : controlPosition;
     }
 
     getVanityTextDimensions() {
@@ -171,16 +178,19 @@ class Index extends React.Component {
         this.updateEnclosureDimensions();
     }
 
-    getMaximumVanityTextLength() {
+    getMaximumVanityTextLength(
+        keyCount = this.state.keyCount,
+        speakerDiameter = this.state.speakerDiameter,
+        controlPosition = this.getControlPosition()
+    ) {
         function possibleGutter(width) {
             return width > 0 ? ENCLOSURE.GUTTER : 0;
         }
 
-        let availableWidh = this.state.keyCount * KEY.WIDTH;
+        let availableWidh = keyCount * KEY.WIDTH;
 
-        if (this.state.controlPosition === POSITION.BACK) {
-            availableWidh -=
-                possibleGutter(availableWidh) + this.state.speakerDiameter;
+        if (controlPosition === POSITION.BACK) {
+            availableWidh -= possibleGutter(availableWidh) + speakerDiameter;
 
             if (this.state.knobsCount >= 0) {
                 availableWidh -=
