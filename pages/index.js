@@ -11,13 +11,16 @@ import {
     ENCLOSURE,
     HARDWARE,
     KEY,
+    OSKITONE,
     POSITION
 } from "../components/constants";
+import { getCoolWordByLength } from "../components/cool-words";
 
 // ERROR: You may need an appropriate loader to handle this file type
 // import "bootstrap/dist/css/bootstrap.css";
 
 const hasLocalStorage = typeof localStorage !== "undefined";
+const hasWindow = typeof window !== "undefined";
 
 class Index extends React.Component {
     stateStorageKey = "STATE";
@@ -56,6 +59,10 @@ class Index extends React.Component {
 
         this.onModalOpen = this.onModalOpen.bind(this);
         this.onModalClosed = this.onModalClosed.bind(this);
+
+        if (hasWindow) {
+            window.randomize = this.randomize.bind(this); // Easter egg!
+        }
     }
 
     getMinimumKeyCount(
@@ -296,6 +303,58 @@ class Index extends React.Component {
                 }
             }
         };
+    }
+
+    randomize() {
+        const getRandomArrayValue = function(values = []) {
+            return values[Math.floor(values.length * Math.random())];
+        };
+
+        const getRandom = function(min = 0, max = 0) {
+            const result = min + Math.round(Math.random() * (max - min));
+            return result;
+        };
+
+        const controlPosition = getRandomArrayValue([
+            POSITION.BACK,
+            POSITION.RIGHT
+        ]);
+
+        const speakerDiameter = function(likelihood = 3 / 4) {
+            return Math.random() <= likelihood
+                ? this.defaultState.speakerDiameter
+                : 0;
+        }.bind(this)();
+
+        const keyCount = getRandom(
+            this.getMinimumKeyCount(
+                "Truthy!",
+                speakerDiameter,
+                controlPosition
+            ),
+            Math.round(OSKITONE.PRINTER.BED_WIDTH / KEY.WIDTH)
+        );
+
+        this.editState({
+            controlPosition: controlPosition,
+            keyCount: keyCount,
+            speakerDiameter: speakerDiameter,
+            vanityText: getCoolWordByLength(
+                this.getMaximumVanityTextLength(
+                    keyCount,
+                    speakerDiameter,
+                    controlPosition
+                )
+            ),
+            startingNoteIndex: getRandom(0, 6),
+            color: getRandomArrayValue(OSKITONE.AVAILABLE_COLORS)
+        });
+
+        setTimeout(() => {
+            if (this.state.valid) {
+                this.randomize();
+            }
+        }, 250);
     }
 
     render() {
