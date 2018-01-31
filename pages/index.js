@@ -1,7 +1,7 @@
 import { extend } from "lodash/fp";
 import { Col, Container, Row } from "reactstrap";
 import Editor from "../components/editor";
-import { ExportModal, InquireModal } from "../components/modals";
+import { InquireModal } from "../components/modals";
 import Head from "../components/head";
 import Header from "../components/header";
 import Preview from "../components/preview";
@@ -290,7 +290,6 @@ class Index extends React.Component {
                             state={this.state}
                             onChange={this.editState}
                             onReset={this.resetState}
-                            onExport={this.onModalOpen("export")}
                             onInquire={this.onModalOpen("inquire")}
                         />
                     </Col>
@@ -299,13 +298,6 @@ class Index extends React.Component {
                         <Preview state={this.state} />
                     </Col>
                 </Row>
-
-                <ExportModal
-                    isOpen={this.state.openModalKey === "export"}
-                    onClosed={this.onModalClosed("export")}
-                    onInquire={this.onModalOpen("inquire")}
-                    data={this.state.exportData}
-                />
 
                 <InquireModal
                     isOpen={this.state.openModalKey === "inquire"}
