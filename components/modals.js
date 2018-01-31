@@ -68,7 +68,8 @@ class InquireModal extends React.Component {
         this.state = {
             open: this.props.isOpen,
             option: undefined,
-            windowAttemptedToOpen: false
+            redirectAttempted: false,
+            missingOptionSelection: false
         };
 
         this.onInquire = this.onInquire.bind(this);
@@ -80,22 +81,32 @@ class InquireModal extends React.Component {
     }
 
     onInquire() {
+        if (!this.state.option) {
+            this.setState({ missingOptionSelection: true });
+            return;
+        }
+
         const subject = "Purchase Inquiry [build.oskitone]";
-        const body =
+        const message =
             'Hello, I would like to inquire about purchasing a synth of type "' +
             this.state.option +
             '" and the following design values:\n\n' +
             JSON.stringify(this.props.data, null, 4);
 
         const url =
-            "mailto:orders@oskitone.com?subject=" +
+            "http://www.oskitone.com/contact?subject=" +
             encodeURIComponent(subject) +
-            "&body=" +
-            encodeURIComponent(body);
+            "&message=" +
+            encodeURIComponent(message);
 
-        window.open(url);
+        this.setState({
+            redirectAttempted: true,
+            missingOptionSelection: false
+        });
 
-        this.setState({ windowAttemptedToOpen: true });
+        window.setTimeout(() => {
+            window.location = url;
+        }, 2000);
     }
 
     getControlPositionText(controlPosition) {
@@ -160,7 +171,10 @@ class InquireModal extends React.Component {
     }
 
     handleOptionSelection(event) {
-        this.setState({ option: event.target.value });
+        this.setState({
+            option: event.target.value,
+            missingOptionSelection: false
+        });
     }
 
     render() {
@@ -299,6 +313,19 @@ class InquireModal extends React.Component {
                         email conversation. You are not obligated to purchase.
                     </p>
 
+                    <Alert
+                        color="danger"
+                        style={{
+                            display: this.state.missingOptionSelection
+                                ? "block"
+                                : "none"
+                        }}
+                    >
+                        <p className="small mb-0">
+                            Please select an option below.
+                        </p>
+                    </Alert>
+
                     <Label for="option">Option</Label>
                     <Table size="sm" className="small">
                         <tbody>
@@ -424,19 +451,14 @@ class InquireModal extends React.Component {
                     <Alert
                         color="info"
                         style={{
-                            display: this.state.windowAttemptedToOpen
+                            display: this.state.redirectAttempted
                                 ? "block"
                                 : "none"
                         }}
                     >
-                        <p className="small">
-                            A new window should have opened with an email for
-                            you to send.
-                        </p>
                         <p className="small mb-0">
-                            If that did not happen, please copy the table
-                            contents above and send it to orders@oskitone.com
-                            along with your option selection.
+                            You will soon be redirected to a contact form, which
+                            you should complete and send.
                         </p>
                     </Alert>
                 </ModalBody>
