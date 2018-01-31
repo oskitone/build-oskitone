@@ -259,7 +259,12 @@ class Index extends React.Component {
     }
 
     resetState() {
-        this.editState(this.defaultState);
+        const message =
+            "Are yous sure? You will lose any changes you have made.";
+
+        if (window.confirm(message)) {
+            this.editState(this.defaultState);
+        }
     }
 
     onModalOpen(modalKey) {
