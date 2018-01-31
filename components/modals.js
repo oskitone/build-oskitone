@@ -13,7 +13,7 @@ import {
 } from "reactstrap";
 import PropTypes from "prop-types";
 
-import { POSITION } from "../components/constants";
+import { COLOR, POSITION } from "../components/constants";
 
 class ExportModal extends React.Component {
     static propTypes = {
@@ -140,13 +140,23 @@ class InquireModal extends React.Component {
             : "None";
     }
 
-    getCanBeMadeByOskitone() {
-        const dimensions = this.props.data.enclosureDimensions;
+    getCanBeMadeByOskitone(
+        maxWidth = 250,
+        maxLength = 210,
+        availableColors = [
+            COLOR.AQUA_BLUE.toUpperCase(),
+            COLOR.HOT_PINK.toUpperCase(),
+            COLOR.APPLE_GREEN.toUpperCase()
+        ]
+    ) {
+        const colorIsAvailable =
+            availableColors.indexOf(this.props.data.color.toUpperCase()) !== -1;
 
-        const maxWidth = 250;
-        const maxLength = 210;
+        const willFitOnPrinter =
+            this.props.data.enclosureDimensions.width <= maxWidth &&
+            this.props.data.enclosureDimensions.height <= maxLength;
 
-        return dimensions.width <= maxWidth && dimensions.height <= maxLength;
+        return colorIsAvailable && willFitOnPrinter;
     }
 
     handleOptionSelection(event) {
@@ -181,14 +191,15 @@ class InquireModal extends React.Component {
                             There may be a problem...
                         </h4>
                         <p>
-                            Looks like your design is too big to be fully made
-                            by Oskitone, which limits your available options
-                            below to only the DIY Kit without any 3D-printed
-                            parts.
+                            Looks like your design cannot fully be made by
+                            Oskitone, because it is either too big or in an
+                            unsupported color. This limits your available
+                            options below to only the DIY Kit without any
+                            3D-printed parts.
                         </p>
                         <p className="mb-0">
-                            You will have to find a 3D-printer on your own that
-                            is big enough for your instrument's dimensions.
+                            To fix that, make your instrument smaller and use
+                            one of the default color options.
                         </p>
                     </Alert>
 
