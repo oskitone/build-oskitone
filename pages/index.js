@@ -1,7 +1,7 @@
 import { extend } from "lodash/fp";
 import { Col, Container, Row } from "reactstrap";
 import Editor from "../components/editor";
-import ExportModal from "../components/export-modal";
+import { ExportModal, InquireModal } from "../components/modals";
 import Head from "../components/head";
 import Header from "../components/header";
 import Preview from "../components/preview";
@@ -35,7 +35,8 @@ class Index extends React.Component {
         maximumKeyCount: 88,
         enclosureDimensions: { width: undefined, height: undefined },
         vanityTextDimensions: { width: undefined, height: undefined },
-        inputValidities: {}
+        inputValidities: {},
+        exportData: undefined
     };
 
     constructor(props) {
@@ -49,11 +50,9 @@ class Index extends React.Component {
         this.editState = this.editState.bind(this);
         this.resetState = this.resetState.bind(this);
 
-        this.state.exportModalIsOpen = false;
-        this.onExportModalOpen = this.onExportModalOpen.bind(this);
-        this.onExportModalClosed = this.onExportModalClosed.bind(this);
-
-        this.onInquire = this.onInquire.bind(this);
+        this.state.openModalKey = undefined;
+        this.onModalOpen = this.onModalOpen.bind(this);
+        this.onModalClosed = this.onModalClosed.bind(this);
     }
 
     getMinimumKeyCount() {
@@ -260,28 +259,21 @@ class Index extends React.Component {
         this.editState(this.defaultState);
     }
 
-    onExportModalOpen() {
-        this.setState({
-            exportData: this.getExportData(),
-            exportModalIsOpen: true
-        });
+    onModalOpen(modalKey) {
+        return () => {
+            this.setState({
+                exportData: this.getExportData(), // todo conditionalize
+                openModalKey: modalKey
+            });
+        };
     }
 
-    onExportModalClosed() {
-        this.setState({ exportModalIsOpen: false });
-    }
-
-    onInquire() {
-        const url =
-            "mailto:orders@oskitone.com?subject=" +
-            encodeURIComponent("Purchase Inquiry [build.oskitone]") +
-            "&body=" +
-            encodeURIComponent(
-                "Hello, I would like to inquire about purchasing a synth of the following design:\n\n" +
-                    JSON.stringify(this.getExportData(), null, 4)
-            );
-
-        window.open(url);
+    onModalClosed(modalKey) {
+        return () => {
+            if (this.state.openModalKey === modalKey) {
+                this.setState({ openModalKey: undefined });
+            }
+        };
     }
 
     render() {
@@ -298,8 +290,8 @@ class Index extends React.Component {
                             state={this.state}
                             onChange={this.editState}
                             onReset={this.resetState}
-                            onExport={this.onExportModalOpen}
-                            onInquire={this.onInquire}
+                            onExport={this.onModalOpen("export")}
+                            onInquire={this.onModalOpen("inquire")}
                         />
                     </Col>
 
@@ -309,9 +301,15 @@ class Index extends React.Component {
                 </Row>
 
                 <ExportModal
-                    isOpen={this.state.exportModalIsOpen}
-                    onClosed={this.onExportModalClosed}
-                    onInquire={this.onInquire}
+                    isOpen={this.state.openModalKey === "export"}
+                    onClosed={this.onModalClosed("export")}
+                    onInquire={this.onModalOpen("inquire")}
+                    data={this.state.exportData}
+                />
+
+                <InquireModal
+                    isOpen={this.state.openModalKey === "inquire"}
+                    onClosed={this.onModalClosed("inquire")}
                     data={this.state.exportData}
                 />
 
