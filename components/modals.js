@@ -13,7 +13,7 @@ import {
 } from "reactstrap";
 import PropTypes from "prop-types";
 
-import { COLOR, POSITION } from "../components/constants";
+import { COLOR, OSKITONE, POSITION } from "../components/constants";
 
 class AboutModal extends React.Component {
     static propTypes = {
@@ -214,13 +214,9 @@ class InquireModal extends React.Component {
     }
 
     getCanBeMadeByOskitone(
-        maxWidth = 250,
-        maxLength = 210,
-        availableColors = [
-            COLOR.AQUA_BLUE.toUpperCase(),
-            COLOR.HOT_PINK.toUpperCase(),
-            COLOR.APPLE_GREEN.toUpperCase()
-        ]
+        maxWidth = OSKITONE.PRINTER.BED_WIDTH,
+        maxLength = OSKITONE.PRINTER.BED_LENGTH,
+        availableColors = OSKITONE.AVAILABLE_COLORS
     ) {
         const colorIsAvailable =
             availableColors.indexOf(this.props.data.color.toUpperCase()) !== -1;
