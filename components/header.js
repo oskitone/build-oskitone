@@ -1,6 +1,6 @@
 import { Row, Col } from "reactstrap";
 
-const Header = props => (
+const Header = () => (
     <Row>
         <Col xs="12" md="7">
             <h1>
@@ -44,6 +44,10 @@ const Header = props => (
                 margin: 0 1rem 0 0;
                 list-style: none;
                 display: inline-block;
+            }
+
+            a {
+                color: #666;
             }
 
             @media (min-width: 768px) {
