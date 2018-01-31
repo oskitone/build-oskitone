@@ -15,6 +15,68 @@ import PropTypes from "prop-types";
 
 import { COLOR, POSITION } from "../components/constants";
 
+class AboutModal extends React.Component {
+    static propTypes = {
+        isOpen: PropTypes.bool,
+        onClosed: PropTypes.func
+    };
+
+    constructor(props) {
+        super(props);
+        this.state = { open: this.props.isOpen };
+    }
+
+    componentWillReceiveProps(props) {
+        this.setState({ isOpen: props.isOpen });
+    }
+
+    render() {
+        return (
+            <Modal
+                onClosed={this.props.onClosed}
+                isOpen={this.state.isOpen}
+                toggle={this.props.onClosed}
+            >
+                <ModalHeader>Whoa, what&lsquo;s all this?!</ModalHeader>
+                <ModalBody>
+                    <p>
+                        <img
+                            src="http://blog.tommy.sh/content/okay-2-synth/okay-2-1200.jpg"
+                            alt="Oskitone OKAY 2 Synth"
+                        />
+                    </p>
+                    <p>
+                        Welcome to BUILD.OSKITONE, where you can make your very
+                        own synthesizer based on the Oskitone{" "}
+                        <a href="http://blog.tommy.sh/posts/okay-synth">
+                            OKAY Synth
+                        </a>{" "}
+                        and its followup, the{" "}
+                        <a href="http://blog.tommy.sh/posts/okay-2-synth">
+                            OKAY 2
+                        </a>.{" "}
+                    </p>
+                    <p>
+                        From here you&lsquo;ll be able to inquire about getting
+                        a real life Oskitone instrument matching your design!
+                    </p>
+                    <p>Thank you for coming, and have fun!!</p>
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={this.props.onClosed}>
+                        Let&lsquo;s go!
+                    </Button>
+                </ModalFooter>
+                <style jsx>{`
+                    img {
+                        max-width: 100%;
+                    }
+                `}</style>
+            </Modal>
+        );
+    }
+}
+
 class ExportModal extends React.Component {
     static propTypes = {
         isOpen: PropTypes.bool,
@@ -483,4 +545,4 @@ class InquireModal extends React.Component {
     }
 }
 
-export { ExportModal, InquireModal };
+export { AboutModal, ExportModal, InquireModal };

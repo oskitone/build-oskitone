@@ -1,7 +1,7 @@
 import { extend } from "lodash/fp";
 import { Col, Container, Row } from "reactstrap";
 import Editor from "../components/editor";
-import { InquireModal } from "../components/modals";
+import { AboutModal, InquireModal } from "../components/modals";
 import Head from "../components/head";
 import Header from "../components/header";
 import Preview from "../components/preview";
@@ -36,6 +36,10 @@ class Index extends React.Component {
         enclosureDimensions: { width: undefined, height: undefined },
         vanityTextDimensions: { width: undefined, height: undefined },
         inputValidities: {},
+        openModalKey:
+            hasLocalStorage && !localStorage.dismissedAboutModal
+                ? "about"
+                : undefined,
         exportData: undefined
     };
 
@@ -50,7 +54,6 @@ class Index extends React.Component {
         this.editState = this.editState.bind(this);
         this.resetState = this.resetState.bind(this);
 
-        this.state.openModalKey = undefined;
         this.onModalOpen = this.onModalOpen.bind(this);
         this.onModalClosed = this.onModalClosed.bind(this);
     }
@@ -272,6 +275,10 @@ class Index extends React.Component {
         return () => {
             if (this.state.openModalKey === modalKey) {
                 this.setState({ openModalKey: undefined });
+
+                if (hasLocalStorage && modalKey === "about") {
+                    localStorage.dismissedAboutModal = 1;
+                }
             }
         };
     }
@@ -282,7 +289,7 @@ class Index extends React.Component {
         return (
             <Container className="container">
                 <Head title="build.oskitone" />
-                <Header />
+                <Header onAboutClick={this.onModalOpen("about")} />
 
                 <Row className="editorAndPreview">
                     <Col xs="12" md="4">
@@ -298,6 +305,11 @@ class Index extends React.Component {
                         <Preview state={this.state} />
                     </Col>
                 </Row>
+
+                <AboutModal
+                    isOpen={this.state.openModalKey === "about"}
+                    onClosed={this.onModalClosed("about")}
+                />
 
                 <InquireModal
                     isOpen={this.state.openModalKey === "inquire"}
