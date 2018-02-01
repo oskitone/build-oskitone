@@ -362,26 +362,6 @@ class Index extends React.Component {
                     :global(body) {
                         margin: ${verticalGutterRem}rem 0;
                     }
-
-                    // TODO: make kosher, w/o global hacks
-                    @media (min-width: 768px) {
-                        :global(.container) {
-                            display: flex;
-                            flex-direction: column;
-                            height: calc(100vh - ${verticalGutterRem * 2}rem);
-                        }
-
-                        :global(.editorAndPreview) {
-                            flex: 1;
-                        }
-
-                        :global(.previewContainer) {
-                            position: absolute;
-                            height: 100%;
-                            left: 0;
-                            right: 0;
-                        }
-                    }
                 `}</style>
             </Container>
         );

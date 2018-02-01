@@ -1,5 +1,5 @@
 import { throttle } from "lodash";
-import { Stage, Layer, Rect, Circle, Text } from "react-konva";
+import { Stage, Layer, Group, Rect, Circle, Text } from "react-konva";
 import { Alert } from "reactstrap";
 import {
     COLOR,
@@ -302,13 +302,11 @@ class Preview extends React.Component {
         const keyY =
             state.enclosureDimensions.height - this.keyHeight - this.gutter;
 
-        const offset = 1;
-        const scale = Math.min(
-            (this.state.stageWidth - offset * 5) /
-                state.enclosureDimensions.width,
-            (this.state.stageHeight - offset * 5) /
-                state.enclosureDimensions.height
-        );
+        const scale =
+            Math.min(
+                this.state.stageWidth / state.enclosureDimensions.width,
+                this.state.stageHeight / state.enclosureDimensions.height
+            ) * 0.9;
 
         if (!state.valid) {
             return (
@@ -324,43 +322,48 @@ class Preview extends React.Component {
                 <Stage
                     width={this.state.stageWidth}
                     height={this.state.stageHeight}
-                    offset={{ x: -offset, y: -offset }}
-                    scale={{ x: scale, y: scale }}
+                    offset={{
+                        x: this.state.stageWidth / -2,
+                        y: this.state.stageHeight / -2
+                    }}
                 >
-                    <Layer>
+                    <Layer
+                        scale={{ x: scale, y: scale }}
+                        x={state.enclosureDimensions.width * (scale / -2)}
+                        y={state.enclosureDimensions.height * (scale / -2)}
+                    >
                         <PreviewRect
                             fill={state.color}
                             width={state.enclosureDimensions.width}
                             height={state.enclosureDimensions.height}
                         />
-                    </Layer>
-                    {controls.map((control, i) => (
-                        <Layer key={i}>
-                            <PreviewCircle
-                                fill={COLOR.DARK}
-                                x={control.knob.x}
-                                y={control.knob.y}
-                                radius={control.knob.diameter / 2}
-                            />
-                            <PreviewRect
-                                fill={COLOR.LIGHT}
-                                x={control.knob.marker.x}
-                                y={control.knob.marker.y}
-                                width={control.knob.marker.width}
-                                height={control.knob.marker.height}
-                            />
-                            <PreviewRect
-                                fill={COLOR.DARK}
-                                x={control.label.x}
-                                y={control.label.y}
-                                width={control.label.width}
-                                height={control.label.height}
-                            />
-                        </Layer>
-                    ))}
-                    <Layer visible={!!state.speakerDiameter}>
+                        {controls.map((control, i) => (
+                            <Group key={i}>
+                                <PreviewCircle
+                                    fill={COLOR.DARK}
+                                    x={control.knob.x}
+                                    y={control.knob.y}
+                                    radius={control.knob.diameter / 2}
+                                />
+                                <PreviewRect
+                                    fill={COLOR.LIGHT}
+                                    x={control.knob.marker.x}
+                                    y={control.knob.marker.y}
+                                    width={control.knob.marker.width}
+                                    height={control.knob.marker.height}
+                                />
+                                <PreviewRect
+                                    fill={COLOR.DARK}
+                                    x={control.label.x}
+                                    y={control.label.y}
+                                    width={control.label.width}
+                                    height={control.label.height}
+                                />
+                            </Group>
+                        ))}
                         <PreviewRect
                             fill={COLOR.DARK}
+                            visible={!!state.speakerDiameter}
                             x={
                                 state.enclosureDimensions.width -
                                 this.gutter -
@@ -370,8 +373,6 @@ class Preview extends React.Component {
                             width={state.speakerDiameter}
                             height={state.speakerDiameter}
                         />
-                    </Layer>
-                    <Layer>
                         <PreviewText
                             text={state.vanityText.toUpperCase()}
                             x={this.gutter}
@@ -384,8 +385,6 @@ class Preview extends React.Component {
                             fontStyle={"900"}
                             align={"center"}
                         />
-                    </Layer>
-                    <Layer>
                         {naturalKeys.map((val, i) => (
                             <PreviewRect
                                 key={i}
@@ -396,8 +395,6 @@ class Preview extends React.Component {
                                 fill={COLOR.LIGHT}
                             />
                         ))}
-                    </Layer>
-                    <Layer>
                         {accidentalKeys.map((val, i) => (
                             <PreviewRect
                                 key={i}
@@ -410,6 +407,20 @@ class Preview extends React.Component {
                         ))}
                     </Layer>
                 </Stage>
+                <style jsx>{`
+                    .previewContainer {
+                        background: ${COLOR.LIGHT};
+                    }
+
+                    @media (min-width: 768px) {
+                        .previewContainer {
+                            position: absolute;
+                            height: 100%;
+                            left: 0;
+                            right: 0;
+                        }
+                    }
+                `}</style>
             </div>
         );
     }
