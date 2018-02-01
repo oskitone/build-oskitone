@@ -1,4 +1,4 @@
-import { throttle } from "lodash";
+import { debounce } from "lodash";
 import { Stage, Layer, Group, Rect, Circle, Text } from "react-konva";
 import { Alert } from "reactstrap";
 import {
@@ -243,7 +243,7 @@ class Preview extends React.Component {
         return knobs;
     };
 
-    updateStageDimensions = throttle(() => {
+    updateStageDimensions = debounce(() => {
         if (this.stageEl) {
             this.setState({
                 stageWidth: this.stageEl.clientWidth,
@@ -258,6 +258,8 @@ class Preview extends React.Component {
     }
 
     render() {
+        this.updateStageDimensions();
+
         const state = this.props.state;
         state.speakerDiameter = parseFloat(state.speakerDiameter) || 0;
         state.startingNoteIndex = parseInt(state.startingNoteIndex);
