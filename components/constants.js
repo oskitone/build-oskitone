@@ -9,9 +9,9 @@ const COLOR = {
     STROKE: "#000",
     DARK: "#444",
     LIGHT: "#eee",
-    AQUA_BLUE: "#15EAFD",
-    HOT_PINK: "#FF69B4",
-    APPLE_GREEN: "#C7FF05"
+    AQUA_BLUE: "#63CAFF",
+    HOT_PINK: "#FF4474",
+    APPLE_GREEN: "#5AFF54"
 };
 
 const HARDWARE = {
