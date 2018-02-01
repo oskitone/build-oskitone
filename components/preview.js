@@ -288,7 +288,9 @@ class Preview extends React.Component {
                 : state.keyCount * this.keyWidth + this.gutter * 2,
             controlPosition === POSITION.BACK
                 ? this.gutter
-                : this.gutter * 2 + state.speakerDiameter,
+                : state.speakerDiameter > 0
+                  ? this.gutter * 2 + state.speakerDiameter
+                  : this.gutter,
             controlPosition === POSITION.BACK
                 ? Math.max(
                       state.speakerDiameter,
