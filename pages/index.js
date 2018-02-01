@@ -63,7 +63,7 @@ class Index extends React.Component {
     getMinimumKeyCount = (
         vanityText = this.state.vanityText,
         speakerDiameter = this.state.speakerDiameter,
-        controlPosition = this.getControlPosition()
+        controlPosition = this.state.controlPosition
     ) => {
         const possibleGutter = width => (width > 0 ? ENCLOSURE.GUTTER : 0);
 
@@ -190,39 +190,36 @@ class Index extends React.Component {
     };
 
     updateMinimumKeyCountAndValidity = () => {
-        let inputValidities = {};
-
         const minimumKeyCount = this.getMinimumKeyCount();
         const maximumKeyCount = this.getMaximumKeyCount();
-        inputValidities.keyCount =
+
+        const keyCountIsValid =
             this.state.keyCount >= minimumKeyCount &&
             this.state.keyCount <= maximumKeyCount &&
             this.state.keyCount % 1 === 0;
 
         const maximumVanityTextLength = this.getMaximumVanityTextLength();
-        inputValidities.vanityText =
-            !inputValidities.keyCount || // Assume valid until keyCount fixed
+        const vanityTextIsValid =
             this.state.vanityText.length <= maximumVanityTextLength;
-
-        let valid = true;
-        for (var key in inputValidities) {
-            valid = valid && inputValidities[key];
-        }
 
         this.setState(
             {
                 minimumKeyCount: minimumKeyCount,
                 maximumKeyCount: maximumKeyCount,
                 maximumVanityTextLength: maximumVanityTextLength,
-                inputValidities: inputValidities,
-                valid: valid
+                inputValidities: {
+                    vanityText: vanityTextIsValid,
+                    keyCount: keyCountIsValid
+                },
+                valid: keyCountIsValid && vanityTextIsValid,
+                renderable: keyCountIsValid
             },
             this.updateEnclosureDimensions
         );
     };
 
     updateEnclosureDimensions = () => {
-        if (this.state.valid) {
+        if (this.state.renderable) {
             this.setState({
                 enclosureDimensions: this.getEnclosureDimensions(),
                 vanityTextDimensions: this.getVanityTextDimensions()

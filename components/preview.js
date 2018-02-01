@@ -162,8 +162,6 @@ class Preview extends React.Component {
     constructor(props) {
         super(props);
 
-        this.vanityText = props.state.vanityText;
-
         this.state = {
             stageWidth: 600,
             stageHeight: 600
@@ -310,7 +308,7 @@ class Preview extends React.Component {
                 this.state.stageHeight / state.enclosureDimensions.height
             ) * 0.9;
 
-        if (!state.valid) {
+        if (!state.renderable) {
             return (
                 <Alert color="danger">
                     <h4 className="alert-heading">Input Error!</h4>
@@ -376,7 +374,9 @@ class Preview extends React.Component {
                             height={state.speakerDiameter}
                         />
                         <PreviewText
-                            text={state.vanityText.toUpperCase()}
+                            text={state.vanityText
+                                .substr(0, state.maximumVanityTextLength)
+                                .toUpperCase()}
                             x={this.gutter}
                             y={this.gutter}
                             fillWidth={state.vanityTextDimensions.width}
