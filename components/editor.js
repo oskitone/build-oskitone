@@ -1,10 +1,11 @@
 import { Col, Button, FormFeedback, FormGroup, Input, Label } from "reactstrap";
 import { TwitterPicker } from "react-color";
-import { COLOR, POSITION } from "../components/constants";
+import { AUDIO_OUT, COLOR, POSITION } from "../components/constants";
 import PropTypes from "prop-types";
 
 class ColorPicker extends React.Component {
     static propTypes = {
+        id: PropTypes.string,
         color: PropTypes.string,
         onChange: PropTypes.func,
         size: PropTypes.string
@@ -49,6 +50,7 @@ class ColorPicker extends React.Component {
                     onClick={this.handleClick}
                     value={this.props.color}
                     size={this.props.size}
+                    id={this.props.id}
                     onChange={event =>
                         this.handleColorChange(event.target.value)
                     }
@@ -192,7 +194,7 @@ class Editor extends React.Component {
                 </FormGroup>
 
                 <FormGroup row>
-                    <Label for="startingNoteIndex" xl={cols[0]} size="sm">
+                    <Label for="controlPosition" xl={cols[0]} size="sm">
                         Control position
                     </Label>
                     <Col xl={cols[1]}>
@@ -212,7 +214,7 @@ class Editor extends React.Component {
                 </FormGroup>
 
                 <FormGroup row>
-                    <Label for="startingNoteIndex" xl={cols[0]} size="sm">
+                    <Label for="speakerDiameter" xl={cols[0]} size="sm">
                         Speaker size
                     </Label>
                     <Col xl={cols[1]}>
@@ -239,6 +241,7 @@ class Editor extends React.Component {
                             bsize="sm"
                             color={this.props.state.color}
                             onChange={this.handleColorChange}
+                            id="color"
                         />
                     </Col>
                 </FormGroup>
