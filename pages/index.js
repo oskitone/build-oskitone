@@ -27,6 +27,7 @@ class Index extends React.Component {
     stateStorageKey = "STATE";
 
     defaultState = {
+        debugMode: false,
         vanityText: "OKAY",
         keyCount: 8,
         startingNoteIndex: 0,
@@ -59,6 +60,10 @@ class Index extends React.Component {
 
         if (hasWindow) {
             window.randomize = this.randomize; // Easter egg!
+
+            window.toggleDebug = () => {
+                this.setState({ debugMode: !this.state.debugMode });
+            };
         }
     }
 

@@ -373,6 +373,16 @@ class Preview extends React.Component {
                             width={state.speakerDiameter}
                             height={state.speakerDiameter}
                         />
+                        <PreviewRect
+                            fill="yellow"
+                            x={this.gutter}
+                            y={this.gutter}
+                            width={state.vanityTextDimensions.width}
+                            height={state.vanityTextDimensions.height}
+                            visible={
+                                state.debugMode && state.vanityText.length > 0
+                            }
+                        />
                         <PreviewText
                             text={state.vanityText
                                 .substr(0, state.maximumVanityTextLength)
