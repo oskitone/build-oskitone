@@ -10,6 +10,7 @@ const COLOR = {
     DARK: "#444",
     LIGHT: "#eee",
     AQUA_BLUE: "#63CAFF",
+    AQUA_BLUE_DARK: "#00A8FF",
     HOT_PINK: "#FF4474",
     APPLE_GREEN: "#5AFF54"
 };

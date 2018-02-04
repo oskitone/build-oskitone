@@ -359,6 +359,16 @@ class Index extends React.Component {
                     :global(body) {
                         margin: ${verticalGutterRem}rem 0;
                     }
+
+                    :global(.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:not(:disabled):not(.disabled):active) {
+                        background: ${COLOR.AQUA_BLUE_DARK};
+                        border-color: ${COLOR.AQUA_BLUE_DARK};
+                    }
+
+                    :global(.btn-info, .btn-info:hover, .btn-info:active, .btn-info:not(:disabled):not(.disabled):active) {
+                        background: ${COLOR.HOT_PINK};
+                        border-color: ${COLOR.HOT_PINK};
+                    }
                 `}</style>
             </Container>
         );
