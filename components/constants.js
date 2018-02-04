@@ -19,6 +19,11 @@ const HARDWARE = {
     KNOB_DIAMETER: 22.4
 };
 
+const AUDIO_OUT = {
+    NONE: 0,
+    QUARTER_INCH: 1
+};
+
 const ENCLOSURE = {
     GUTTER: 5,
     RELATED_GUTTER: 2
@@ -52,4 +57,14 @@ const OSKITONE = {
     }
 };
 
-export { COLOR, CONTROL, ENCLOSURE, HARDWARE, KEY, LABEL, OSKITONE, POSITION };
+export {
+    AUDIO_OUT,
+    COLOR,
+    CONTROL,
+    ENCLOSURE,
+    HARDWARE,
+    KEY,
+    LABEL,
+    OSKITONE,
+    POSITION
+};

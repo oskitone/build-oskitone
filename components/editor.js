@@ -233,6 +233,25 @@ class Editor extends React.Component {
                 </FormGroup>
 
                 <FormGroup row>
+                    <Label for="audioOut" xl={cols[0]} size="sm">
+                        Audio Out
+                    </Label>
+                    <Col xl={cols[1]}>
+                        <Input
+                            type="select"
+                            name="audioOut"
+                            id="audioOut"
+                            bsize="sm"
+                            value={this.props.state.audioOut}
+                            onChange={this.handleChange}
+                        >
+                            <option value={AUDIO_OUT.NONE}>None</option>
+                            <option value={AUDIO_OUT.QUARTER_INCH}>1/4"</option>
+                        </Input>
+                    </Col>
+                </FormGroup>
+
+                <FormGroup row>
                     <Label for="color" xl={cols[0]} size="sm">
                         Color
                     </Label>

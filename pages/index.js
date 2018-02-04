@@ -6,6 +6,7 @@ import Head from "../components/head";
 import Header from "../components/header";
 import Preview from "../components/preview";
 import {
+    AUDIO_OUT,
     COLOR,
     CONTROL,
     ENCLOSURE,
@@ -31,6 +32,7 @@ class Index extends React.Component {
         startingNoteIndex: 0,
         color: COLOR.AQUA_BLUE,
         speakerDiameter: 49.8,
+        audioOut: AUDIO_OUT.NONE,
         knobsCount: 2,
         controlPosition: POSITION.AUTO,
         valid: true,
@@ -310,6 +312,10 @@ class Index extends React.Component {
                     controlPosition
                 )
             ),
+            audioOut: getRandomArrayValue([
+                AUDIO_OUT.NONE,
+                AUDIO_OUT.QUARTER_INCH
+            ]),
             startingNoteIndex: getRandom(0, 6),
             color: getRandomArrayValue(OSKITONE.AVAILABLE_COLORS)
         });
