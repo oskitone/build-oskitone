@@ -276,6 +276,7 @@ class Preview extends React.Component {
             true
         );
 
+        // TODO: use extracted getControlPosition()
         const controlPosition =
             state.controlPosition === POSITION.AUTO
                 ? state.keyCount > 8 ? POSITION.BACK : POSITION.RIGHT
@@ -301,6 +302,22 @@ class Preview extends React.Component {
 
         const keyY =
             state.enclosureDimensions.height - this.keyHeight - this.gutter;
+
+        const controlsWidth =
+            HARDWARE.KNOB_DIAMETER * state.knobsCount +
+            ENCLOSURE.GUTTER * Math.max(state.knobsCount - 1, 0);
+        const controlsAndSpeakerSideWidth = Math.max(
+            controlsWidth,
+            state.speakerDiameter
+        );
+
+        const speakerX =
+            state.enclosureDimensions.width -
+            this.gutter -
+            (controlPosition === POSITION.BACK
+                ? state.speakerDiameter
+                : controlsAndSpeakerSideWidth -
+                  (controlsAndSpeakerSideWidth - state.speakerDiameter) / 2);
 
         const scale =
             Math.min(
@@ -364,11 +381,7 @@ class Preview extends React.Component {
                         <PreviewRect
                             fill={COLOR.DARK}
                             visible={!!state.speakerDiameter}
-                            x={
-                                state.enclosureDimensions.width -
-                                this.gutter -
-                                state.speakerDiameter
-                            }
+                            x={speakerX}
                             y={this.gutter}
                             width={state.speakerDiameter}
                             height={state.speakerDiameter}

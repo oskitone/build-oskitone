@@ -169,6 +169,29 @@ class Editor extends React.Component {
                     </Col>
                 </FormGroup>
 
+                <FormGroup
+                    row
+                    style={{
+                        display: this.props.state.debugMode ? "flex" : "none"
+                    }}
+                >
+                    <Label for="knobsCount" xl={cols[0]} size="sm">
+                        Knobs
+                    </Label>
+                    <Col xl={cols[1]}>
+                        <Input
+                            type="number"
+                            min={0}
+                            max={4}
+                            name="knobsCount"
+                            id="knobsCount"
+                            bsize="sm"
+                            value={this.props.state.knobsCount}
+                            onChange={this.handleChange}
+                        />
+                    </Col>
+                </FormGroup>
+
                 <FormGroup row>
                     <Label for="startingNoteIndex" xl={cols[0]} size="sm">
                         Starting note

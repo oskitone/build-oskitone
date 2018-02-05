@@ -23,6 +23,9 @@ import { getCoolWordByLength } from "../components/cool-words";
 const hasLocalStorage = typeof localStorage !== "undefined";
 const hasWindow = typeof window !== "undefined";
 
+const gutter = (val, gutter = ENCLOSURE.GUTTER) =>
+    val > 0 ? val + gutter : val;
+
 class Index extends React.Component {
     stateStorageKey = "STATE";
 
@@ -84,10 +87,7 @@ class Index extends React.Component {
             width += possibleGutter(width) + speakerDiameter;
 
             if (this.state.knobsCount >= 0) {
-                width +=
-                    possibleGutter(width) +
-                    HARDWARE.KNOB_DIAMETER * this.state.knobsCount +
-                    ENCLOSURE.GUTTER * (this.state.knobsCount - 1);
+                width += possibleGutter(width) + this.getControlsWidth();
             }
         }
 
@@ -99,6 +99,7 @@ class Index extends React.Component {
 
     getMaximumKeyCount = () => this.defaultState.maximumKeyCount;
 
+    // TODO: factor in knobsCount, extract or expose
     getControlPosition = (
         controlPosition = this.state.controlPosition,
         keyCount = this.state.keyCount
@@ -107,57 +108,75 @@ class Index extends React.Component {
             ? this.state.keyCount > 8 ? POSITION.BACK : POSITION.RIGHT
             : controlPosition;
 
-    getVanityTextDimensions = () => ({
-        width:
-            KEY.WIDTH * this.state.keyCount -
-            (this.getControlPosition() === POSITION.BACK
-                ? (this.state.speakerDiameter > 0
-                      ? ENCLOSURE.GUTTER + this.state.speakerDiameter
-                      : 0) +
-                  this.state.knobsCount *
-                      (HARDWARE.KNOB_DIAMETER + ENCLOSURE.GUTTER)
-                : 0),
-        height: Math.max(
-            this.getControlPosition() === POSITION.BACK
-                ? Math.max(this.state.speakerDiameter, CONTROL.MINIMUM_HEIGHT)
-                : this.state.speakerDiameter +
-                  CONTROL.MINIMUM_HEIGHT -
-                  KEY.HEIGHT,
-            this.minimumVanityTextHeight
-        )
-    });
+    getVanityTextDimensions = () => {
+        const controlHeight =
+            this.state.knobsCount > 0 ? CONTROL.MINIMUM_HEIGHT : 0;
 
-    getEnclosureDimensions = () => ({
-        width:
-            this.state.keyCount * KEY.WIDTH +
-            ENCLOSURE.GUTTER * 2 +
-            (this.getControlPosition() === POSITION.BACK
-                ? 0
-                : this.state.speakerDiameter > 0
-                  ? this.state.speakerDiameter + ENCLOSURE.GUTTER
-                  : HARDWARE.KNOB_DIAMETER * 2 + ENCLOSURE.GUTTER * 2),
-        height:
+        return {
+            width:
+                KEY.WIDTH * this.state.keyCount -
+                (this.getControlPosition() === POSITION.BACK
+                    ? (this.state.speakerDiameter > 0
+                          ? ENCLOSURE.GUTTER + this.state.speakerDiameter
+                          : 0) + gutter(this.getControlsWidth())
+                    : 0),
+            height: Math.max(
+                this.getControlPosition() === POSITION.BACK
+                    ? Math.max(this.state.speakerDiameter, controlHeight)
+                    : this.state.speakerDiameter + controlHeight - KEY.HEIGHT,
+                this.minimumVanityTextHeight
+            )
+        };
+    };
+
+    getControlsWidth = () =>
+        HARDWARE.KNOB_DIAMETER * this.state.knobsCount +
+        ENCLOSURE.GUTTER * Math.max(this.state.knobsCount - 1, 0);
+
+    getEnclosureDimensions = () => {
+        const controlHeight =
+            this.state.knobsCount > 0 ? CONTROL.MINIMUM_HEIGHT : 0;
+
+        const possibleSideWidth =
             this.getControlPosition() === POSITION.BACK
-                ? KEY.HEIGHT +
-                  ENCLOSURE.GUTTER * 2 +
-                  Math.max(this.state.speakerDiameter, CONTROL.MINIMUM_HEIGHT) +
-                  ENCLOSURE.GUTTER
-                : this.state.vanityText.length > 0
-                  ? this.getVanityTextDimensions().height +
-                    KEY.HEIGHT +
-                    ENCLOSURE.GUTTER * 3
-                  : this.state.speakerDiameter > 0
-                    ? this.state.speakerDiameter +
-                      CONTROL.MINIMUM_HEIGHT +
-                      ENCLOSURE.GUTTER * 3
-                    : Math.max(
-                          KEY.HEIGHT,
-                          this.state.speakerDiameter +
-                              ENCLOSURE.GUTTER +
-                              CONTROL.MINIMUM_HEIGHT
-                      ) +
-                      ENCLOSURE.GUTTER * 2
-    });
+                ? 0
+                : Math.max(this.state.speakerDiameter, this.getControlsWidth());
+
+        return {
+            width:
+                this.state.keyCount * KEY.WIDTH +
+                ENCLOSURE.GUTTER * 2 +
+                gutter(possibleSideWidth),
+            height:
+                this.getControlPosition() === POSITION.BACK
+                    ? KEY.HEIGHT +
+                      ENCLOSURE.GUTTER * 2 +
+                      gutter(
+                          Math.max(
+                              this.state.vanityText.length > 0
+                                  ? this.minimumVanityTextHeight
+                                  : 0,
+                              this.state.speakerDiameter,
+                              controlHeight
+                          )
+                      )
+                    : this.state.vanityText.length > 0
+                      ? this.getVanityTextDimensions().height +
+                        KEY.HEIGHT +
+                        ENCLOSURE.GUTTER * 3
+                      : this.state.speakerDiameter > 0
+                        ? gutter(this.state.speakerDiameter) +
+                          gutter(controlHeight) +
+                          ENCLOSURE.GUTTER
+                        : Math.max(
+                              KEY.HEIGHT,
+                              this.state.speakerDiameter +
+                                  ENCLOSURE.GUTTER +
+                                  controlHeight
+                          ) +
+                          ENCLOSURE.GUTTER * 2
+        };
+    };
 
     getLocalState = () =>
         extend(
@@ -187,9 +206,7 @@ class Index extends React.Component {
 
             if (this.state.knobsCount >= 0) {
                 availableWidh -=
-                    possibleGutter(availableWidh) +
-                    HARDWARE.KNOB_DIAMETER * this.state.knobsCount +
-                    ENCLOSURE.GUTTER * (this.state.knobsCount - 1);
+                    possibleGutter(availableWidh) + this.getControlsWidth();
             }
         }
 
