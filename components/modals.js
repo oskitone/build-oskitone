@@ -61,6 +61,14 @@ class AboutModal extends React.Component {
                         a real life Oskitone instrument matching your design!
                     </p>
                     <p>Thank you for coming, and have fun!!</p>
+                    <p>
+                        <small>
+                            Read more about this project{" "}
+                            <a href="http://blog.tommy.sh/posts/build-a-build-a-synth">
+                                here
+                            </a>.
+                        </small>
+                    </p>
                 </ModalBody>
                 <ModalFooter>
                     <Button color="primary" onClick={this.props.onClosed}>
