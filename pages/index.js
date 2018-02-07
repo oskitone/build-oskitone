@@ -16,6 +16,7 @@ import {
     POSITION
 } from "../components/constants";
 import { getCoolWordByLength } from "../components/cool-words";
+import ReactGA from "react-ga";
 
 // ERROR: You may need an appropriate loader to handle this file type
 // import "bootstrap/dist/css/bootstrap.css";
@@ -60,6 +61,10 @@ class Index extends React.Component {
         this.minimumVanityTextHeight = 10;
 
         this.state = this.getLocalState();
+
+        ReactGA.initialize("UA-9757644-14", {
+            debug: process.env.NODE_ENV !== "production"
+        });
 
         if (hasWindow) {
             window.randomize = this.randomize; // Easter egg!
@@ -190,6 +195,8 @@ class Index extends React.Component {
         this.setState(this.getLocalState());
         this.updateMinimumKeyCountAndValidity();
         this.updateEnclosureDimensions();
+
+        ReactGA.pageview(window.location.pathname + window.location.search);
     }
 
     getMaximumVanityTextLength = (
@@ -271,6 +278,12 @@ class Index extends React.Component {
         }
 
         this.setState(newState, this.updateMinimumKeyCountAndValidity);
+
+        ReactGA.event({
+            category: "Interaction",
+            action: "Edit",
+            label: Object.keys(newState)[0]
+        });
     };
 
     resetState = () => {
@@ -287,6 +300,8 @@ class Index extends React.Component {
             exportData: this.getExportData(), // todo conditionalize
             openModalKey: modalKey
         });
+
+        ReactGA.modalview(modalKey);
     };
 
     onModalClosed = modalKey => () => {
