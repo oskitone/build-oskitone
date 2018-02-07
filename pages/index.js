@@ -1,4 +1,3 @@
-import { extend } from "lodash/fp";
 import { Col, Container, Row } from "reactstrap";
 import Editor from "../components/editor";
 import { AboutModal, InquireModal } from "../components/modals";
@@ -184,7 +183,8 @@ class Index extends React.Component {
     };
 
     getLocalState = () =>
-        extend(
+        Object.assign(
+            {},
             this.defaultState,
             hasLocalStorage
                 ? JSON.parse(localStorage.getItem(this.stateStorageKey))
@@ -273,7 +273,9 @@ class Index extends React.Component {
         if (hasLocalStorage) {
             localStorage.setItem(
                 this.stateStorageKey,
-                JSON.stringify(extend(this.getLocalState(), newState))
+                JSON.stringify(
+                    Object.assign({}, this.getLocalState(), newState)
+                )
             );
         }
 
