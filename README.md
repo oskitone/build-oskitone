@@ -1,5 +1,6 @@
-## build-oskitone
+![BUILD.OSKITONE](http://build.oskitone.com/static/haha-sup.png)
 
-Experimental Oskitone synth builder. Work in progress!!
+**URL:** [http://build.oskitone.com/](http://build.oskitone.com/)  
+**Blog post:** [http://blog.tommy.sh/posts/build-a-build-a-synth](http://blog.tommy.sh/posts/build-a-build-a-synth)
 
-This project was bootstrapped with [Create Next App](https://github.com/segmentio/create-next-app).
+MIT licensed or as components allow
