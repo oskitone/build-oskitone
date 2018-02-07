@@ -354,7 +354,12 @@ class Index extends React.Component {
 
         return (
             <Container className="container">
-                <Head title="build.oskitone" />
+                <Head
+                    title="build.oskitone"
+                    description="Design your own Oskitone Synthesizer"
+                    url="http://build.oskitone.com/"
+                    ogImage="http://build.oskitone.com/static/haha-sup.png"
+                />
                 <Header onAboutClick={this.onModalOpen("about")} />
 
                 <Row className="editorAndPreview">
