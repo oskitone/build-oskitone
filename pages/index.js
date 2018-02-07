@@ -16,6 +16,7 @@ import {
 } from "../components/constants";
 import { getCoolWordByLength } from "../components/cool-words";
 import ReactGA from "react-ga";
+import PropTypes from "prop-types";
 
 // ERROR: You may need an appropriate loader to handle this file type
 // import "bootstrap/dist/css/bootstrap.css";
@@ -52,8 +53,15 @@ class Index extends React.Component {
         exportData: undefined
     };
 
+    static propTypes = {
+        url: PropTypes.object
+    };
+
     constructor(props) {
         super(props);
+
+        this.isDev = !!props.url.query.dev;
+        this.sendTracking = !!props.url.query.sendTracking;
 
         this.vanityTextMinimumWidth =
             KEY.WIDTH * this.defaultState.minimumKeyCount;
@@ -61,9 +69,9 @@ class Index extends React.Component {
 
         this.state = this.getLocalState();
 
-        ReactGA.initialize("UA-9757644-14", {
-            debug: process.env.NODE_ENV !== "production"
-        });
+        if (this.sendTracking) {
+            ReactGA.initialize("UA-9757644-14", { debug: this.isDev });
+        }
 
         if (hasWindow) {
             window.randomize = this.randomize; // Easter egg!
@@ -196,7 +204,9 @@ class Index extends React.Component {
         this.updateMinimumKeyCountAndValidity();
         this.updateEnclosureDimensions();
 
-        ReactGA.pageview(window.location.pathname + window.location.search);
+        if (this.sendTracking) {
+            ReactGA.pageview(window.location.pathname + window.location.search);
+        }
     }
 
     getMaximumVanityTextLength = (
@@ -281,11 +291,13 @@ class Index extends React.Component {
 
         this.setState(newState, this.updateMinimumKeyCountAndValidity);
 
-        ReactGA.event({
-            category: "Interaction",
-            action: "Edit",
-            label: Object.keys(newState)[0]
-        });
+        if (this.sendTracking) {
+            ReactGA.event({
+                category: "Interaction",
+                action: "Edit",
+                label: Object.keys(newState)[0]
+            });
+        }
     };
 
     resetState = () => {
@@ -303,7 +315,9 @@ class Index extends React.Component {
             openModalKey: modalKey
         });
 
-        ReactGA.modalview(modalKey);
+        if (this.sendTracking) {
+            ReactGA.modalview(modalKey);
+        }
     };
 
     onModalClosed = modalKey => () => {
