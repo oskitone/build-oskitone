@@ -319,8 +319,12 @@ class Preview extends React.Component {
                 : controlsAndSpeakerSideWidth -
                   (controlsAndSpeakerSideWidth - state.speakerDiameter) / 2);
 
-        const scale =
-            Math.min(
+        const scale = state.sideways
+            ? Math.min(
+                this.state.stageHeight / state.enclosureDimensions.width,
+                this.state.stageWidth / state.enclosureDimensions.height
+            ) * 0.9
+            : Math.min(
                 this.state.stageWidth / state.enclosureDimensions.width,
                 this.state.stageHeight / state.enclosureDimensions.height
             ) * 0.9;
@@ -346,8 +350,11 @@ class Preview extends React.Component {
                 >
                     <Layer
                         scale={{ x: scale, y: scale }}
-                        x={state.enclosureDimensions.width * (scale / -2)}
-                        y={state.enclosureDimensions.height * (scale / -2)}
+                        offset={{
+                            x: state.enclosureDimensions.width / 2,
+                            y: state.enclosureDimensions.height / 2
+                        }}
+                        rotation={state.sideways ? 90 : 0}
                     >
                         <PreviewRect
                             fill={state.color}

@@ -46,6 +46,7 @@ class Index extends React.Component {
         enclosureDimensions: { width: undefined, height: undefined },
         vanityTextDimensions: { width: undefined, height: undefined },
         inputValidities: {},
+        sideways: false,
         openModalKey:
             hasLocalStorage && !localStorage.dismissedAboutModal
                 ? "about"
