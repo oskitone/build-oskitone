@@ -276,6 +276,7 @@ class Index extends React.Component {
         color: this.state.color,
         speakerDiameter: this.state.speakerDiameter,
         controlPosition: this.getControlPosition(),
+        audioOut: this.state.audioOut,
         enclosureDimensions: this.state.enclosureDimensions,
         vanityTextDimensions: this.state.vanityTextDimensions
     });

@@ -13,7 +13,7 @@ import {
 } from "reactstrap";
 import PropTypes from "prop-types";
 
-import { COLOR, OSKITONE, POSITION } from "../components/constants";
+import { AUDIO_OUT, OSKITONE, POSITION } from "../components/constants";
 
 class AboutModal extends React.Component {
     static propTypes = {
@@ -211,6 +211,14 @@ class InquireModal extends React.Component {
             ? '2" x 2"' // TODO: extract
             : "None";
 
+    getAudioOutText = () => {
+        if (parseInt(this.props.data.audioOut) === AUDIO_OUT.QUARTER_INCH) {
+            return '1/4"';
+        } else {
+            return "None";
+        }
+    };
+
     getCanBeMadeByOskitone = (
         maxWidth = OSKITONE.PRINTER.BED_WIDTH,
         maxLength = OSKITONE.PRINTER.BED_LENGTH,
@@ -332,6 +340,10 @@ class InquireModal extends React.Component {
                             <tr>
                                 <th>Speaker</th>
                                 <td>{this.getSpeakerSizeText()}</td>
+                            </tr>
+                            <tr>
+                                <th>Audio Out</th>
+                                <td>{this.getAudioOutText()}</td>
                             </tr>
                             <tr>
                                 <th>Dimensions</th>
