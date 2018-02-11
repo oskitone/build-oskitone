@@ -1,6 +1,11 @@
 import { Col, Container, Row } from "reactstrap";
 import Editor from "../components/editor";
-import { AboutModal, InquireModal } from "../components/modals";
+import {
+    AboutModal,
+    ExportModal,
+    ImportModal,
+    InquireModal
+} from "../components/modals";
 import Head from "../components/head";
 import Header from "../components/header";
 import Preview from "../components/preview";
@@ -382,6 +387,23 @@ class Index extends React.Component {
         }, 250);
     };
 
+    importSave = data => {
+        const get = key =>
+            data[key] !== undefined ? data[key] : this.defaultState[key];
+
+        const newState = {
+            vanityText: get("vanityText"),
+            keyCount: get("keyCount"),
+            startingNoteIndex: get("startingNoteIndex"),
+            color: get("color"),
+            speakerDiameter: get("speakerDiameter"),
+            controlPosition: get("controlPosition"),
+            audioOut: get("audioOut")
+        };
+
+        this.editState(newState);
+    };
+
     render() {
         const verticalGutterRem = 1;
 
@@ -402,6 +424,8 @@ class Index extends React.Component {
                             onChange={this.editState}
                             onReset={this.resetState}
                             onInquire={this.onModalOpen("inquire")}
+                            onExport={this.onModalOpen("export")}
+                            onImport={this.onModalOpen("import")}
                         />
                     </Col>
 
@@ -413,6 +437,20 @@ class Index extends React.Component {
                 <AboutModal
                     isOpen={this.state.openModalKey === "about"}
                     onClosed={this.onModalClosed("about")}
+                />
+
+                <ExportModal
+                    isOpen={this.state.openModalKey === "export"}
+                    onClosed={this.onModalClosed("export")}
+                    onInquire={this.onModalOpen("inquire")}
+                    data={this.state.exportData}
+                />
+
+                <ImportModal
+                    isOpen={this.state.openModalKey === "import"}
+                    onClosed={this.onModalClosed("import")}
+                    onImportSave={this.importSave}
+                    data={this.state.exportData}
                 />
 
                 <InquireModal

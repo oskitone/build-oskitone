@@ -2,6 +2,7 @@ import { round } from "lodash";
 import {
     Alert,
     Button,
+    FormFeedback,
     FormGroup,
     Input,
     Label,
@@ -111,12 +112,95 @@ class ExportModal extends React.Component {
             >
                 <ModalHeader>Export</ModalHeader>
                 <ModalBody>
-                    <p>Copy and save this text to your computer.</p>
                     <pre>{JSON.stringify(this.props.data, null, 4)}</pre>
                 </ModalBody>
                 <ModalFooter>
                     <Button color="primary" onClick={this.props.onInquire}>
                         Inquire for purchase
+                    </Button>
+                    <Button onClick={this.props.onClosed}>Cancel</Button>
+                </ModalFooter>
+            </Modal>
+        );
+    }
+}
+
+class ImportModal extends React.Component {
+    static propTypes = {
+        isOpen: PropTypes.bool,
+        data: PropTypes.object,
+        onClosed: PropTypes.func,
+        onImportSave: PropTypes.func,
+        handleSaveClick: PropTypes.func
+    };
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            open: this.props.isOpen,
+            valid: true
+        };
+    }
+
+    componentWillReceiveProps(props) {
+        this.setState({ isOpen: props.isOpen });
+    }
+
+    parseInput = event => {
+        const value = event.target.value.trim();
+
+        let valid = true;
+        let data = {};
+
+        if (value) {
+            try {
+                data = JSON.parse(value);
+            } catch (error1) {
+                try {
+                    data = eval("(" + data + ")");
+                } catch (error2) {
+                    valid = false;
+                }
+            }
+        }
+
+        this.setState({
+            value,
+            data,
+            valid
+        });
+    };
+
+    handleSaveClick = () => {
+        this.props.onImportSave(this.state.data);
+        this.props.onClosed();
+    };
+
+    render() {
+        return (
+            <Modal
+                onClosed={this.props.onClosed}
+                isOpen={this.state.isOpen}
+                toggle={this.props.onClosed}
+            >
+                <ModalHeader>Import</ModalHeader>
+                <ModalBody>
+                    <FormGroup>
+                        <Input
+                            type="textarea"
+                            onChange={this.parseInput}
+                            valid={this.state.valid}
+                        />
+                        <FormFeedback>Invalid</FormFeedback>
+                    </FormGroup>
+                </ModalBody>
+                <ModalFooter>
+                    <Button
+                        color="primary"
+                        disabled={!this.state.valid || !this.state.value}
+                        onClick={this.handleSaveClick}
+                    >
+                        Save
                     </Button>
                     <Button onClick={this.props.onClosed}>Cancel</Button>
                 </ModalFooter>
@@ -545,4 +629,4 @@ class InquireModal extends React.Component {
     }
 }
 
-export { AboutModal, ExportModal, InquireModal };
+export { AboutModal, ExportModal, ImportModal, InquireModal };

@@ -1,4 +1,15 @@
-import { Col, Button, FormFeedback, FormGroup, Input, Label } from "reactstrap";
+import {
+    Col,
+    Button,
+    ButtonDropdown,
+    DropdownItem,
+    DropdownToggle,
+    DropdownMenu,
+    FormFeedback,
+    FormGroup,
+    Input,
+    Label
+} from "reactstrap";
 import { TwitterPicker } from "react-color";
 import { AUDIO_OUT, COLOR, POSITION } from "../components/constants";
 import PropTypes from "prop-types";
@@ -79,7 +90,9 @@ class Editor extends React.Component {
         state: PropTypes.object,
         onChange: PropTypes.func,
         onReset: PropTypes.func,
+        onExport: PropTypes.func,
         onInquire: PropTypes.func,
+        onImport: PropTypes.func,
         inquireUrl: PropTypes.string
     };
 
@@ -297,13 +310,29 @@ class Editor extends React.Component {
                     >
                         Purchase
                     </Button>{" "}
-                    <Button
+                    <ButtonDropdown
                         size="sm"
-                        color="secondary"
-                        onClick={this.props.onReset}
+                        isOpen={this.state.moreButtonIsOpen}
+                        toggle={this.toggleMoreButton}
                     >
-                        Reset
-                    </Button>
+                        <DropdownToggle caret color="secondary">
+                            More
+                        </DropdownToggle>
+                        <DropdownMenu>
+                            <DropdownItem
+                                disabled={!this.props.state.valid}
+                                onClick={this.props.onExport}
+                            >
+                                Export
+                            </DropdownItem>
+                            <DropdownItem onClick={this.props.onImport}>
+                                Import
+                            </DropdownItem>
+                            <DropdownItem onClick={this.props.onReset}>
+                                Reset
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </ButtonDropdown>
                 </FormGroup>
             </div>
         );
