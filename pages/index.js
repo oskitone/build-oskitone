@@ -71,7 +71,7 @@ class Index extends React.Component {
 
         this.vanityTextMinimumWidth =
             KEY.WIDTH * this.defaultState.minimumKeyCount;
-        this.minimumVanityTextHeight = 10;
+        this.minimumVanityTextHeight = HARDWARE.KNOB_DIAMETER;
 
         this.state = this.getLocalState();
 
