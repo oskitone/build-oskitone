@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const next = require("next");
 
@@ -10,10 +12,7 @@ app
         const server = express();
 
         server.get("*", (req, res) => {
-            return app.render(req, res, "/", {
-                dev,
-                sendTracking: process.argv.indexOf("--no-tracking") === -1
-            });
+            return app.render(req, res, "/");
         });
 
         server.listen(3000, err => {

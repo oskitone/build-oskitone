@@ -1,7 +1,7 @@
 {
   "name": "build-oskitone",
   "scripts": {
-    "dev": "node server.js --no-tracking",
+    "dev": "GA_TRACKING_ID=null node server.js",
     "dev:tracking": "node server.js",
     "build": "next build",
     "export": "next export",

@@ -66,17 +66,19 @@ class Index extends React.Component {
     constructor(props) {
         super(props);
 
-        this.isDev = !!props.url.query.dev;
-        this.sendTracking = !!props.url.query.sendTracking;
-
         this.vanityTextMinimumWidth =
             KEY.WIDTH * this.defaultState.minimumKeyCount;
         this.minimumVanityTextHeight = HARDWARE.KNOB_DIAMETER;
 
         this.state = this.getLocalState();
 
+        this.sendTracking =
+            !!process.env.GA_TRACKING_ID &&
+            process.env.GA_TRACKING_ID !== "null";
         if (this.sendTracking) {
-            ReactGA.initialize("UA-9757644-14", { debug: this.isDev });
+            ReactGA.initialize(process.env.GA_TRACKING_ID, {
+                debug: process.env.NODE_ENV !== "production"
+            });
         }
 
         if (hasWindow) {
@@ -459,6 +461,14 @@ class Index extends React.Component {
                     data={this.state.exportData}
                 />
 
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `env = ${JSON.stringify({
+                            NODE_ENV: process.env.NODE_ENV,
+                            GA_TRACKING_ID: process.env.GA_TRACKING_ID
+                        })}`
+                    }}
+                />
                 <style jsx>{`
                     :global(body) {
                         margin: ${verticalGutterRem}rem 0;

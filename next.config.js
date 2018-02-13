@@ -1,7 +1,10 @@
+require("dotenv").config();
+const webpack = require("webpack");
+
 module.exports = {
     exportPathMap: function() {
         return {
-            "/": { page: "/", query: { sendTracking: true } }
+            "/": { page: "/" }
         };
     },
     webpack: config => {
@@ -9,6 +12,12 @@ module.exports = {
         config.node = {
             fs: "empty"
         };
+
+        config.plugins.push(
+            new webpack.DefinePlugin({
+                "process.env": "window.env"
+            })
+        );
 
         return config;
     }
