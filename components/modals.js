@@ -237,7 +237,10 @@ class InquireModal extends React.Component {
             return;
         }
 
-        const subject = "Purchase Inquiry [build.oskitone]";
+        const subject =
+            '[build.oskitone] Purchase Inquiry: "' +
+            this.props.data.vanityText +
+            '"';
         const message =
             'Hello, I would like to inquire about purchasing a synth of type "' +
             this.state.option +
