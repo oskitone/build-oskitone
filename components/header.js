@@ -1,4 +1,4 @@
-import { Button, Row, Col } from "reactstrap";
+import { Badge, Button, Row, Col } from "reactstrap";
 import PropTypes from "prop-types";
 
 class Header extends React.Component {
@@ -15,6 +15,13 @@ class Header extends React.Component {
                             oskitone
                         </span>
                     </h1>
+                    <Badge
+                        pill
+                        color="secondary"
+                        style={{ verticalAlign: "text-bottom" }}
+                    >
+                        beta
+                    </Badge>
                 </Col>
                 <Col xs="12" md="5">
                     <ul className="links">
@@ -47,6 +54,8 @@ class Header extends React.Component {
                             "Helvetica Neue", Arial, sans-serif,
                             "Apple Color Emoji", "Segoe UI Emoji",
                             "Segoe UI Symbol";
+                        display: inline-block;
+                        margin-right: 0.5rem;
                     }
 
                     h1 .oskitone {
