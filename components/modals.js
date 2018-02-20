@@ -137,6 +137,7 @@ class ImportModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            email: undefined,
             open: this.props.isOpen,
             valid: true
         };
@@ -237,10 +238,13 @@ class InquireModal extends React.Component {
             return;
         }
 
+        const hasEmail = !!this.state.email;
+
         const subject =
-            '[build.oskitone] Purchase Inquiry: "' +
+            '[build.oskitone] "' +
             this.props.data.vanityText +
-            '"';
+            '"' +
+            (hasEmail ? " by " + this.state.email : "");
         const message =
             'Hello, I would like to inquire about purchasing a synth of type "' +
             this.state.option +
@@ -251,7 +255,9 @@ class InquireModal extends React.Component {
             "http://www.oskitone.com/contact?subject=" +
             encodeURIComponent(subject) +
             "&message=" +
-            encodeURIComponent(message);
+            encodeURIComponent(message) +
+            // The contact form's name and email input's names are swapped!
+            (hasEmail ? "&name=" + encodeURIComponent(this.state.email) : "");
 
         this.setState({
             redirectAttempted: true,
@@ -320,6 +326,10 @@ class InquireModal extends React.Component {
             option: event.target.value,
             missingOptionSelection: false
         });
+    };
+
+    handleEmailChange = event => {
+        this.setState({ email: event.target.value });
     };
 
     render() {
@@ -575,6 +585,20 @@ class InquireModal extends React.Component {
                             </tr>
                         </tbody>
                     </Table>
+
+                    <FormGroup>
+                        <Label for="email" size="sm">
+                            Email
+                        </Label>
+                        <Input
+                            type="email"
+                            name="email"
+                            id="email"
+                            bsize="sm"
+                            placeholder="Your email address"
+                            onChange={this.handleEmailChange}
+                        />
+                    </FormGroup>
 
                     <h6>Please note</h6>
 
