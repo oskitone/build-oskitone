@@ -503,6 +503,13 @@ class InquireModal extends React.Component {
                                     </FormGroup>
                                 </td>
                                 <td>
+                                    <img
+                                        src="https://images.bigcartel.com/product_images/212467102/2018-02-19+14.44.47.jpg?auto=format&fit=min&h=60&w=90"
+                                        alt="DIY Kit BYOP (Bring Your Own
+                                        Printer)"
+                                    />
+                                </td>
+                                <td>
                                     <Label for="optionByop">
                                         <strong>
                                             DIY Kit BYOP (Bring Your Own
@@ -538,6 +545,12 @@ class InquireModal extends React.Component {
                                     </FormGroup>
                                 </td>
                                 <td>
+                                    <img
+                                        src="https://images.bigcartel.com/product_images/203906786/2017-09-27+11.28.07.jpg?auto=format&fit=min&h=60&w=90"
+                                        alt="DIY Kit Complete"
+                                    />
+                                </td>
+                                <td>
                                     <Label for="optionComplete">
                                         <strong>DIY Kit Complete</strong>
                                         <br />
@@ -568,6 +581,12 @@ class InquireModal extends React.Component {
                                             }
                                         />
                                     </FormGroup>
+                                </td>
+                                <td>
+                                    <img
+                                        src="https://images.bigcartel.com/product_images/210113791/2018-01-11+10.36.08.jpg?auto=format&fit=min&h=60&w=90"
+                                        alt="Fully Assembled"
+                                    />
                                 </td>
                                 <td>
                                     <Label for="optionFullyAssembled">
