@@ -16,6 +16,8 @@ import {
     ENCLOSURE,
     HARDWARE,
     KEY,
+    MODEL,
+    MODEL_DEFAULTS,
     OSKITONE,
     POSITION
 } from "../components/constants";
@@ -32,19 +34,14 @@ const hasWindow = typeof window !== "undefined";
 const gutter = (val, gutter = ENCLOSURE.GUTTER) =>
     val > 0 ? val + gutter : val;
 
+const defaultModel = MODEL.OKAY;
 class Index extends React.Component {
     stateStorageKey = "STATE";
 
-    defaultState = {
-        debugMode: false,
+    defaultState = Object.assign({}, MODEL_DEFAULTS[defaultModel], {
+        model: defaultModel,
         vanityText: "OKAY",
-        keyCount: 8,
-        startingNoteIndex: 0,
-        color: COLOR.AQUA_BLUE,
-        speakerDiameter: 49.8,
-        audioOut: AUDIO_OUT.NONE,
-        knobsCount: 2,
-        controlPosition: POSITION.AUTO,
+        debugMode: false,
         valid: true,
         minimumKeyCount: 3,
         maximumKeyCount: 88,
@@ -57,7 +54,7 @@ class Index extends React.Component {
                 ? "about"
                 : undefined,
         exportData: undefined
-    };
+    });
 
     static propTypes = {
         url: PropTypes.object
@@ -277,6 +274,7 @@ class Index extends React.Component {
     };
 
     getExportData = () => ({
+        model: this.getModel(),
         vanityText: this.state.vanityText,
         keyCount: this.state.keyCount,
         startingNoteIndex: this.state.startingNoteIndex,
@@ -287,6 +285,32 @@ class Index extends React.Component {
         enclosureDimensions: this.state.enclosureDimensions,
         vanityTextDimensions: this.state.vanityTextDimensions
     });
+
+    getModel = (newState = {}) => {
+        let model = MODEL.CUSTOM;
+
+        const state = Object.assign({}, this.state, newState);
+        state.keyCount = parseInt(state.keyCount);
+        state.audioOut = parseInt(state.audioOut);
+        state.controlPosition = this.getControlPosition(
+            state.controlPosition,
+            state.keyCount
+        );
+
+        for (let modelKey in MODEL_DEFAULTS) {
+            let match = true;
+
+            for (let key in MODEL_DEFAULTS[modelKey]) {
+                match = match && state[key] === MODEL_DEFAULTS[modelKey][key];
+            }
+
+            if (match) {
+                model = modelKey;
+            }
+        }
+
+        return model;
+    };
 
     editState = (newState = {}) => {
         if (hasLocalStorage) {
@@ -406,6 +430,10 @@ class Index extends React.Component {
         this.editState(newState);
     };
 
+    changeModel = model => {
+        this.editState(MODEL_DEFAULTS[model]);
+    };
+
     render() {
         const verticalGutterRem = 1;
 
@@ -424,6 +452,7 @@ class Index extends React.Component {
                         <Editor
                             state={this.state}
                             onChange={this.editState}
+                            onModelChange={this.changeModel}
                             onReset={this.resetState}
                             onInquire={this.onModalOpen("inquire")}
                             onExport={this.onModalOpen("export")}

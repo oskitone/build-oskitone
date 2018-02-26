@@ -14,7 +14,7 @@ import {
 } from "reactstrap";
 import PropTypes from "prop-types";
 
-import { AUDIO_OUT, OSKITONE, POSITION } from "../components/constants";
+import { AUDIO_OUT, OSKITONE, MODEL, POSITION } from "../components/constants";
 
 class AboutModal extends React.Component {
     static propTypes = {
@@ -312,6 +312,18 @@ class InquireModal extends React.Component {
         }
     };
 
+    getModelText = (model = parseInt(this.props.data.model)) => {
+        if (model === MODEL.OKAY) {
+            return "OKAY";
+        }
+
+        if (model === MODEL.OKAY_2) {
+            return "OKAY 2";
+        }
+
+        return "Custom";
+    };
+
     getCanBeMadeByOskitone = (
         maxWidth = OSKITONE.PRINTER.BED_WIDTH,
         maxLength = OSKITONE.PRINTER.BED_LENGTH,
@@ -401,6 +413,10 @@ class InquireModal extends React.Component {
                                         ? data.vanityText.toUpperCase()
                                         : "None"}
                                 </td>
+                            </tr>
+                            <tr>
+                                <th>Model</th>
+                                <td>{this.getModelText()}</td>
                             </tr>
                             <tr>
                                 <th>Keys</th>

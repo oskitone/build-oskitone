@@ -11,7 +11,7 @@ import {
     Label
 } from "reactstrap";
 import { TwitterPicker } from "react-color";
-import { AUDIO_OUT, COLOR, POSITION } from "../components/constants";
+import { AUDIO_OUT, COLOR, MODEL, POSITION } from "../components/constants";
 import PropTypes from "prop-types";
 
 class ColorPicker extends React.Component {
@@ -89,6 +89,7 @@ class Editor extends React.Component {
     static propTypes = {
         state: PropTypes.object,
         onChange: PropTypes.func,
+        onModelChange: PropTypes.func,
         onReset: PropTypes.func,
         onExport: PropTypes.func,
         onInquire: PropTypes.func,
@@ -99,9 +100,10 @@ class Editor extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = props.state;
-
-        this.state.moreButtonIsOpen = false;
+        this.state = Object.assign(props.state, {
+            moreButtonIsOpen: false,
+            model: MODEL.OKAY
+        });
     }
 
     handleChange = event => {
@@ -114,6 +116,14 @@ class Editor extends React.Component {
             newState[name] = value;
             this.props.onChange(newState);
         }
+    };
+
+    handleModelChange = event => {
+        this.handleChange(event);
+
+        const model = parseInt(event.target.value);
+        this.props.onModelChange(model);
+        this.setState({ model: model });
     };
 
     handleColorChange = color => {
@@ -133,6 +143,9 @@ class Editor extends React.Component {
             // Intentionally avoiding "true" valid state styling
             return valid === true || valid === undefined ? null : false;
         };
+
+        const isCustom = parseInt(this.props.state.model) === MODEL.CUSTOM;
+        const customInputRowStyle = { opacity: !isCustom ? 0.5 : 1 };
 
         return (
             <div>
@@ -159,11 +172,46 @@ class Editor extends React.Component {
                 </FormGroup>
 
                 <FormGroup row>
+                    <Label for="color" xl={cols[0]} size="sm">
+                        Color
+                    </Label>
+                    <Col xl={cols[1]}>
+                        <ColorPicker
+                            bsize="sm"
+                            color={this.props.state.color}
+                            onChange={this.handleColorChange}
+                            id="color"
+                        />
+                    </Col>
+                </FormGroup>
+
+                <FormGroup row>
+                    <Label for="model" xl={cols[0]} size="sm">
+                        Model
+                    </Label>
+                    <Col xl={cols[1]}>
+                        <Input
+                            type="select"
+                            name="model"
+                            id="model"
+                            bsize="sm"
+                            value={this.props.state.model}
+                            onChange={this.handleModelChange}
+                        >
+                            <option value={MODEL.OKAY}>OKAY</option>
+                            <option value={MODEL.OKAY_2}>OKAY 2</option>
+                            <option value={MODEL.CUSTOM}>Custom</option>
+                        </Input>
+                    </Col>
+                </FormGroup>
+
+                <FormGroup row style={customInputRowStyle}>
                     <Label for="keyCount" xl={cols[0]} size="sm">
                         Natural key count
                     </Label>
                     <Col xl={cols[1]}>
                         <Input
+                            disabled={!isCustom ? "disabled" : ""}
                             valid={isValid("keyCount")}
                             type="number"
                             min={this.props.state.minimumKeyCount}
@@ -205,12 +253,13 @@ class Editor extends React.Component {
                     </Col>
                 </FormGroup>
 
-                <FormGroup row>
+                <FormGroup row style={customInputRowStyle}>
                     <Label for="startingNoteIndex" xl={cols[0]} size="sm">
                         Starting note
                     </Label>
                     <Col xl={cols[1]}>
                         <Input
+                            disabled={!isCustom ? "disabled" : ""}
                             type="select"
                             name="startingNoteIndex"
                             id="startingNoteIndex"
@@ -229,12 +278,13 @@ class Editor extends React.Component {
                     </Col>
                 </FormGroup>
 
-                <FormGroup row>
+                <FormGroup row style={customInputRowStyle}>
                     <Label for="controlPosition" xl={cols[0]} size="sm">
                         Control position
                     </Label>
                     <Col xl={cols[1]}>
                         <Input
+                            disabled={!isCustom ? "disabled" : ""}
                             type="select"
                             name="controlPosition"
                             id="controlPosition"
@@ -249,12 +299,13 @@ class Editor extends React.Component {
                     </Col>
                 </FormGroup>
 
-                <FormGroup row>
+                <FormGroup row style={customInputRowStyle}>
                     <Label for="speakerDiameter" xl={cols[0]} size="sm">
                         Speaker size
                     </Label>
                     <Col xl={cols[1]}>
                         <Input
+                            disabled={!isCustom ? "disabled" : ""}
                             type="select"
                             name="speakerDiameter"
                             id="speakerDiameter"
@@ -268,12 +319,13 @@ class Editor extends React.Component {
                     </Col>
                 </FormGroup>
 
-                <FormGroup row>
+                <FormGroup row style={customInputRowStyle}>
                     <Label for="audioOut" xl={cols[0]} size="sm">
                         Audio Out
                     </Label>
                     <Col xl={cols[1]}>
                         <Input
+                            disabled={!isCustom ? "disabled" : ""}
                             type="select"
                             name="audioOut"
                             id="audioOut"
@@ -284,20 +336,6 @@ class Editor extends React.Component {
                             <option value={AUDIO_OUT.NONE}>None</option>
                             <option value={AUDIO_OUT.QUARTER_INCH}>1/4"</option>
                         </Input>
-                    </Col>
-                </FormGroup>
-
-                <FormGroup row>
-                    <Label for="color" xl={cols[0]} size="sm">
-                        Color
-                    </Label>
-                    <Col xl={cols[1]}>
-                        <ColorPicker
-                            bsize="sm"
-                            color={this.props.state.color}
-                            onChange={this.handleColorChange}
-                            id="color"
-                        />
                     </Col>
                 </FormGroup>
 

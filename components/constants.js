@@ -45,6 +45,30 @@ const CONTROL = {
         HARDWARE.KNOB_DIAMETER + ENCLOSURE.RELATED_GUTTER + LABEL.HEIGHT
 };
 
+const MODEL = {
+    OKAY: 0,
+    OKAY_2: 1,
+    CUSTOM: 2
+};
+
+let MODEL_DEFAULTS = {};
+MODEL_DEFAULTS[MODEL.OKAY] = {
+    keyCount: 8,
+    startingNoteIndex: 0,
+    speakerDiameter: 49.8,
+    audioOut: AUDIO_OUT.NONE,
+    knobsCount: 2,
+    controlPosition: POSITION.RIGHT
+};
+MODEL_DEFAULTS[MODEL.OKAY_2] = {
+    keyCount: 15,
+    startingNoteIndex: 0,
+    speakerDiameter: 49.8,
+    audioOut: AUDIO_OUT.QUARTER_INCH,
+    knobsCount: 2,
+    controlPosition: POSITION.BACK
+};
+
 const OSKITONE = {
     AVAILABLE_COLORS: [
         COLOR.AQUA_BLUE.toUpperCase(),
@@ -65,6 +89,8 @@ export {
     HARDWARE,
     KEY,
     LABEL,
+    MODEL,
+    MODEL_DEFAULTS,
     OSKITONE,
     POSITION
 };
