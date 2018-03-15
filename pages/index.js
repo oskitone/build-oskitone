@@ -40,6 +40,7 @@ class Index extends React.Component {
 
     defaultState = Object.assign({}, MODEL_DEFAULTS[defaultModel], {
         model: defaultModel,
+        color: COLOR.AQUA_BLUE,
         vanityText: "OKAY",
         debugMode: false,
         valid: true,
