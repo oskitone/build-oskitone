@@ -81,7 +81,7 @@ const OSKITONE = {
     }
 };
 
-export {
+module.exports = {
     AUDIO_OUT,
     COLOR,
     CONTROL,
