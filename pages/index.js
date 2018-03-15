@@ -69,6 +69,7 @@ class Index extends React.Component {
         this.minimumVanityTextHeight = HARDWARE.KNOB_DIAMETER;
 
         this.state = this.getLocalState();
+        this.pageModel = (props.url.query || {}).model;
 
         this.sendTracking =
             !!process.env.GA_TRACKING_ID &&
@@ -206,7 +207,12 @@ class Index extends React.Component {
         );
 
     componentDidMount() {
-        this.setState(this.getLocalState());
+        if (this.pageModel !== undefined) {
+            this.changeModel(this.pageModel);
+        } else {
+            this.setState(this.getLocalState());
+        }
+
         this.updateMinimumKeyCountAndValidity();
         this.updateEnclosureDimensions();
 
@@ -432,7 +438,9 @@ class Index extends React.Component {
     };
 
     changeModel = model => {
-        this.editState(MODEL_DEFAULTS[model]);
+        this.editState(
+            Object.assign({}, { model: model }, MODEL_DEFAULTS[model])
+        );
     };
 
     render() {

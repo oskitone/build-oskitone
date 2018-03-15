@@ -6,10 +6,19 @@ const next = require("next");
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 
+const MODEL = require("./components/constants").MODEL;
+
 app
     .prepare()
     .then(() => {
         const server = express();
+
+        server.get(`/model/okay`, (req, res) => {
+            return app.render(req, res, "/", { dev, model: MODEL.OKAY });
+        });
+        server.get(`/model/okay-2`, (req, res) => {
+            return app.render(req, res, "/", { dev, model: MODEL.OKAY_2 });
+        });
 
         server.get("*", (req, res) => {
             return app.render(req, res, "/");
