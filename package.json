@@ -16,7 +16,7 @@
     "eslint-plugin-react": "^7.6.0",
     "express": "^4.16.2",
     "konva": "^1.7.6",
-    "next": "4.2.3",
+    "next": "^4.2.3",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-color": "^2.13.8",
