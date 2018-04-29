@@ -188,6 +188,7 @@ class ImportModal extends React.Component {
                 <ModalBody>
                     <FormGroup>
                         <Input
+                            autoFocus={true}
                             type="textarea"
                             onChange={this.parseInput}
                             valid={this.state.valid}
