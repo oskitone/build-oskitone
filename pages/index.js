@@ -434,6 +434,8 @@ class Index extends React.Component {
             audioOut: get("audioOut")
         };
 
+        newState.model = this.getModel(newState);
+
         this.editState(newState);
     };
 
