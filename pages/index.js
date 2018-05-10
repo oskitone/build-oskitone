@@ -280,18 +280,26 @@ class Index extends React.Component {
         }
     };
 
-    getExportData = () => ({
-        model: this.getModel(),
-        vanityText: this.state.vanityText,
-        keyCount: this.state.keyCount,
-        startingNoteIndex: this.state.startingNoteIndex,
-        color: this.state.color,
-        speakerDiameter: this.state.speakerDiameter,
-        controlPosition: this.getControlPosition(),
-        audioOut: this.state.audioOut,
-        enclosureDimensions: this.state.enclosureDimensions,
-        vanityTextDimensions: this.state.vanityTextDimensions
-    });
+    getExportData = () => {
+        let data = {
+            model: this.getModel(),
+            vanityText: this.state.vanityText,
+            keyCount: this.state.keyCount,
+            startingNoteIndex: this.state.startingNoteIndex,
+            color: this.state.color,
+            speakerDiameter: this.state.speakerDiameter,
+            controlPosition: this.getControlPosition(),
+            audioOut: this.state.audioOut,
+            enclosureDimensions: this.state.enclosureDimensions,
+            vanityTextDimensions: this.state.vanityTextDimensions
+        };
+
+        if (this.state.debugMode) {
+            data.knobsCount = parseInt(this.state.knobsCount);
+        }
+
+        return data;
+    };
 
     getModel = (newState = {}) => {
         let model = MODEL.CUSTOM;
@@ -431,7 +439,8 @@ class Index extends React.Component {
             color: get("color"),
             speakerDiameter: get("speakerDiameter"),
             controlPosition: get("controlPosition"),
-            audioOut: get("audioOut")
+            audioOut: get("audioOut"),
+            knobsCount: get("knobsCount")
         };
 
         newState.model = this.getModel(newState);
