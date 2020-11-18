@@ -672,7 +672,7 @@ class InquireModal extends React.Component {
                     </Alert>
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="primary" onClick={this.onInquire}>
+                    <Button color="primary" onClick={this.onInquire} disabled>
                         Inquire for purchase
                     </Button>
                     <Button onClick={this.props.onClosed}>Cancel</Button>

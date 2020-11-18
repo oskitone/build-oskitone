@@ -1,4 +1,4 @@
-import { Col, Container, Row } from "reactstrap";
+import { Alert, Col, Container, Row } from "reactstrap";
 import Editor from "../components/editor";
 import {
     AboutModal,
@@ -466,6 +466,10 @@ class Index extends React.Component {
                     ogImage="http://build.oskitone.com/static/haha-sup.png"
                 />
                 <Header onAboutClick={this.onModalOpen("about")} />
+
+                <Alert color="danger">
+                    <strong>Update Fall 2020:</strong> This project is deprecated and isn't accepting new orders. Sorry! Thanks!
+                </Alert>
 
                 <Row className="editorAndPreview">
                     <Col xs="12" md="4">
